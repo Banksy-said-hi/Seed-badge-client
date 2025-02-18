@@ -20,7 +20,7 @@ const chainConfig = {
     },
   });
 
-  const web3auth = new Web3Auth({
+  const web3Auth = new Web3Auth({
     clientId: "BPWmcBa2DZfRL6FYnz7ZdwiMKhUu32QdfWoR3LxjeW2vvruPCqZ0G-ojeniQyVaOg1jTZbEmOrZqRQWYFA21Opg", // Get your Client ID from the Web3Auth Dashboard
     web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
     privateKeyProvider,
@@ -59,18 +59,6 @@ const chainConfig = {
     privateKeyProvider,
   });
 
-  web3auth.configureAdapter(authAdapter);
+  web3Auth.configureAdapter(authAdapter);
 
-  export const initWeb3Auth = async () => {
-    await web3auth.initModal();
-    
-    //TODO: This is for testing purposes only. Please remove this line in production.
-    if (web3auth.connected) {
-      await web3auth.logout();
-    }
-    
-};
-
-export const connect = async () => {
-  return await web3auth.connect();
-};
+  export const web3AuthInstance = web3Auth;
