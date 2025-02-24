@@ -10,12 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@web3auth/auth-adapter": "^9.6.0",
     "@web3auth/base": "^9.6.0",
     "@web3auth/ethereum-provider": "^9.6.0",
-    "@web3auth/modal": "^9.6.0",
-    "@web3auth/modal-react-hooks": "^9.6.0",
     "@web3auth/no-modal": "^9.6.0",
-    "@web3auth/wallet-services-plugin-react-hooks": "^9.6.1",
+    "@web3auth/wallet-services-plugin": "^9.6.1",
     "buffer": "^6.0.3",
     "ethers": "^5.7.2",
     "process": "^0.11.10",
