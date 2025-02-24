@@ -1,5 +1,6 @@
-import { Web3Auth } from "@web3auth/modal";
-import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK, UX_MODE, WALLET_ADAPTERS } from "@web3auth/base";
+import { Web3AuthNoModal } from "@web3auth/no-modal";
+import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
+import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK, UX_MODE } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { AuthAdapter, WHITE_LABEL_THEME, WhiteLabelData } from "@web3auth/auth-adapter";
 
@@ -20,19 +21,11 @@ const chainConfig = {
     },
   });
 
-  const web3Auth = new Web3Auth({
+  const web3Auth = new Web3AuthNoModal({
     clientId: "BBciNB8_-ajaAbCTCcMlMFEkbRQn5l5C5BrYq25liwjWtm98X92ZmseHAE014DqyZxWcqi9pyR_0FkgEtZ4sQSY", // Get your Client ID from the Web3Auth Dashboard
     web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+    storageKey: "local",
     privateKeyProvider,
-    uiConfig: {
-        appName: "Klang",
-        appUrl: "https://web3auth.io",
-        logoLight: "https://web3auth.io/logo-light.png",
-        logoDark: "https://web3auth.io/logo-dark.png",
-        defaultLanguage: "en",
-        mode: "auto",
-        useLogoLoader: true,
-      },
   });
 
   const authAdapter = new AuthAdapter({
@@ -41,8 +34,8 @@ const chainConfig = {
       // network: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET, // Optional - Provide only if you haven't provided it in the Web3Auth Instantiation Code
       uxMode: UX_MODE.POPUP,
       whiteLabel: {
-        appName: "W3A Heroes",
-        appUrl: "https://web3auth.io",
+        appName: "Klang",
+        appUrl: "https://www.klang-games.com/",
         logoLight: "https://web3auth.io/images/web3auth-logo.svg",
         logoDark: "https://web3auth.io/images/web3auth-logo---Dark.svg",
         defaultLanguage: "en", // en, de, ja, ko, zh, es, fr, pt, nl, tr
@@ -68,81 +61,13 @@ const chainConfig = {
 
   web3Auth.configureAdapter(authAdapter);
 
+  const walletServicesPlugin = new WalletServicesPlugin();
+
+  web3Auth.addPlugin(walletServicesPlugin);
+
+
   export async function initialize() {
-    await web3Auth.initModal({
-      modalConfig: {
-        [WALLET_ADAPTERS.AUTH]: {
-          label: "auth",
-          loginMethods: {
-            google: {
-              name: "Google",
-            },
-            twitter: {
-              name: 'twitter',
-              showOnModal: false,
-            },
-            facebook: {
-              name: 'facebook',
-              showOnModal: false,
-            },
-            github: {
-              name: 'github',
-              showOnModal: false,
-            },
-            reddit: {
-              name: 'reddit',
-              showOnModal: false,
-            },
-            discord: {
-              name: 'discord',
-              showOnModal: false,
-            },
-            twitch: {
-              name: 'twitch',
-              showOnModal: false,
-            },
-            apple: {
-              name: 'apple',
-              showOnModal: false,
-            },
-            line: {
-              name: 'line',
-              showOnModal: false,
-            },
-            kakao: {
-              name: 'kakao',
-              showOnModal: false,
-            },
-            linkedin: {
-              name: 'linkedin',
-              showOnModal: false,
-            },
-            weibo: {
-              name: 'weibo',
-              showOnModal: false,
-            },
-            wechat: {
-              name: 'wechat',
-              showOnModal: false,
-            },
-            farcaster:{
-              name: 'farcaster',
-              showOnModal: false,
-            },
-            email_passwordless: {
-              name: "email_passwordless",
-              showOnModal: false,
-            },
-            sms_passwordless: {
-              name: "sms_passwordless",
-              showOnModal: false,
-            },
-          },
-          // setting it to false will hide all social login methods from modal.
-          showOnModal: true,
-        },
-      },
-    });
+    await web3Auth.init();
   }
 
   export const web3AuthInstance = web3Auth;

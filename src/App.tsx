@@ -1,6 +1,7 @@
 import './App.css'
 import { useState, useEffect } from 'react';
 import { web3AuthInstance, initialize } from './web3Auth';
+import { WALLET_ADAPTERS } from '@web3auth/base';
 
 // Because of React's strict mode App() is called twice, but the web3AuthInstance should be initialized only once.
 // This variable is used to check if the web3AuthInstance is already initialized.
@@ -50,7 +51,9 @@ catch (error){
   const connect = async () => {
     setIsLoading(true);
     try {
-      const provider = await web3AuthInstance.connect();
+      const provider = await web3AuthInstance.connectTo(WALLET_ADAPTERS.AUTH, {
+        loginProvider: "google",
+      });
       console.log("Connected " + provider);
       setIsConnected(true);
     } catch (error) {
@@ -82,7 +85,7 @@ catch (error){
         </button>
       ) : (
         <button onClick={connect} disabled={isLoading}>
-          {isLoading ? "..." : "Connect"}
+          {isLoading ? "..." : "Login with Google"}
         </button>
       )}
     </div>
