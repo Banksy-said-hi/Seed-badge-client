@@ -46,11 +46,11 @@ const chainConfig = {
         useLogoLoader: true,
       } as WhiteLabelData,
       loginConfig:{
-        google: {
-          verifier: "google_test", // Pass the Verifier name here
-          typeOfLogin: "google", // Pass on the login provider of the verifier you've created
-          clientId: "229577254612-np5j8aqqck2qf4aaa8ioo5qgl3j8nkq6.apps.googleusercontent.com", // Pass on the Google `Client ID` here
-        }, 
+        jwt: {
+          verifier: "klang", // Name of the verifier created on Web3Auth Dashboard
+          typeOfLogin: "jwt",
+          clientId: "BBciNB8_-ajaAbCTCcMlMFEkbRQn5l5C5BrYq25liwjWtm98X92ZmseHAE014DqyZxWcqi9pyR_0FkgEtZ4sQSY", // Web3Auth Client ID
+        } 
       }
     },
     loginSettings: {
