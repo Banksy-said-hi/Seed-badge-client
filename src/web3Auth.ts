@@ -32,7 +32,7 @@ const chainConfig = {
     adapterSettings: {
       // clientId, // Optional - Provide only if you haven't provided it in the Web3Auth Instantiation Code
       // network: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET, // Optional - Provide only if you haven't provided it in the Web3Auth Instantiation Code
-      uxMode: UX_MODE.POPUP,
+      uxMode: UX_MODE.REDIRECT,
       whiteLabel: {
         appName: "Klang",
         appUrl: "https://www.klang-games.com/",
@@ -49,7 +49,7 @@ const chainConfig = {
         jwt: {
           verifier: "klang", // Name of the verifier created on Web3Auth Dashboard
           typeOfLogin: "jwt",
-          clientId: "BBciNB8_-ajaAbCTCcMlMFEkbRQn5l5C5BrYq25liwjWtm98X92ZmseHAE014DqyZxWcqi9pyR_0FkgEtZ4sQSY", // Web3Auth Client ID
+          clientId: "b17dec48-2a07-4c12-9cda-8778d9209707", // Web3Auth Client ID
         } 
       }
     },

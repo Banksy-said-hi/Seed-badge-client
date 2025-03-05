@@ -27,6 +27,13 @@ function App() {
 
         console.log("Web3Auth Initialized");
 
+        console.log("Connected: " + web3AuthInstance.connected);
+
+        if (!web3AuthInstance.connected)
+        {
+          await handleRedirect();
+        }
+
         setIsLoading(false);
       } catch (error) {
         console.error("Web3Auth initialization error " + error);
@@ -74,8 +81,9 @@ function App() {
       try {
         const response = await fetch('https://login.seed.game/oauth2/token', {
           method: 'POST',
+          // mode: 'no-cors', // Add this line to set the mode to 'no-cors'
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/x-www-form-urlencoded'
           },
           body: new URLSearchParams({
             grant_type: 'authorization_code',
@@ -93,7 +101,9 @@ function App() {
           loginProvider: "jwt",
           extraLoginOptions: {
             id_token: data.id_token,
-            verifierIdField: "email",
+            verifierIdField: "sub",
+            domain: 'https://login.seed.game/oauth2',
+            redirectUrl: window.location.origin,
           },
         });
 
@@ -104,10 +114,6 @@ function App() {
       }
     }
   };
-
-  useEffect(() => {
-    handleRedirect();
-  }, []);
 
   const logout = async () => {
     setIsLoading(true);
