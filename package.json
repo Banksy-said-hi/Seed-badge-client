@@ -16,7 +16,7 @@
     "@web3auth/no-modal": "^9.6.0",
     "@web3auth/wallet-services-plugin": "^9.6.1",
     "buffer": "^6.0.3",
-    "ethers": "^5.7.2",
+    "ethers": "^6.13.5",
     "process": "^0.11.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
