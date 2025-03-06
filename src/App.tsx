@@ -3,31 +3,37 @@ import { useState, useEffect } from 'react';
 import { web3AuthInstance, initialize } from './web3Auth';
 import { WALLET_ADAPTERS } from '@web3auth/base';
 import crypto from 'crypto';
+import { getConnectedAccount, getChain } from './web3AuthProvider';
 
 let initialized: boolean = false;
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [account, setAccount] = useState<string | null>(null);
+  const [chain, setChainId] = useState<string | null>(null);
 
   useEffect(() => {
     const init = async () => {
-      try {
+      try
+   {
         if (initialized) {
           return;
         }
 
         initialized = true;
 
-        web3AuthInstance.on("connected", () => {
+        console.log("Initializing Web3Auth...");
+
+        web3AuthInstance.on("connected", async () => {
           setIsConnected(web3AuthInstance.connected);
+          setAccount(await getConnectedAccount());
+          setChainId(await getChain());
         });
 
         await initialize();
 
         console.log("Web3Auth Initialized");
-
-        console.log("Connected: " + web3AuthInstance.connected);
 
         if (!web3AuthInstance.connected)
         {
@@ -121,6 +127,7 @@ function App() {
       await web3AuthInstance.logout();
       console.log("Logged out");
       setIsConnected(false);
+      setAccount(null);
     } catch (error) {
       console.error("Logout Error " + error);
     } finally {
@@ -130,14 +137,15 @@ function App() {
 
   return (
     <div>
-      <p>Check</p>
+      {account ? (<p>{"Connected Account: " + account}</p>) : (<p>{isLoading ? "..." : "Not Connected"}</p>)}
+      {chain ? (<p>{"Connected Network: " + chain}</p>) : (<p>{isLoading ? "..." : "Not Connected"}</p>)}
       {isConnected ? (
         <button onClick={logout} disabled={isLoading}>
           {isLoading ? "..." : "Logout"}
         </button>
       ) : (
         <button onClick={connect} disabled={isLoading}>
-          {isLoading ? "..." : "Login with Google"}
+          {isLoading ? "..." : "Login with Klang"}
         </button>
       )}
     </div>
