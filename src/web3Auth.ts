@@ -1,73 +1,75 @@
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
-import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK, UX_MODE } from "@web3auth/base";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import { AuthAdapter, WHITE_LABEL_THEME, WhiteLabelData } from "@web3auth/auth-adapter";
+import { RequestArguments, WALLET_ADAPTER_TYPE } from "@web3auth/base";
 
-const chainConfig = {
-    chainNamespace: CHAIN_NAMESPACES.EIP155,
-    chainId: "0x1", // Please use 0x1 for Mainnet
-    rpcTarget: "https://rpc.ankr.com/eth",
-    displayName: "Ethereum Mainnet",
-    blockExplorerUrl: "https://etherscan.io/",
-    ticker: "ETH",
-    tickerName: "Ethereum",
-    logo: "https://images.toruswallet.io/eth.svg",
-  };
+import { web3authOptions } from "./web3authConfig";
+import { authAdapter } from "./authConfig";
+import { resolveChainId } from "./chainConfig";
+import { LoginParams } from "@web3auth/auth-adapter";
 
-  const privateKeyProvider = new EthereumPrivateKeyProvider({
-    config: {
-      chainConfig,
-    },
-  });
+export const web3auth = new Web3AuthNoModal(web3authOptions);
 
-  const web3Auth = new Web3AuthNoModal({
-    clientId: "BBciNB8_-ajaAbCTCcMlMFEkbRQn5l5C5BrYq25liwjWtm98X92ZmseHAE014DqyZxWcqi9pyR_0FkgEtZ4sQSY", // Get your Client ID from the Web3Auth Dashboard
-    web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
-    storageKey: "local",
-    privateKeyProvider,
-  });
-
-  const authAdapter = new AuthAdapter({
-    adapterSettings: {
-      // clientId, // Optional - Provide only if you haven't provided it in the Web3Auth Instantiation Code
-      // network: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET, // Optional - Provide only if you haven't provided it in the Web3Auth Instantiation Code
-      uxMode: UX_MODE.REDIRECT,
-      whiteLabel: {
-        appName: "Klang",
-        appUrl: "https://www.klang-games.com/",
-        logoLight: "https://web3auth.io/images/web3auth-logo.svg",
-        logoDark: "https://web3auth.io/images/web3auth-logo---Dark.svg",
-        defaultLanguage: "en", // en, de, ja, ko, zh, es, fr, pt, nl, tr
-        mode: "auto", // whether to enable dark mode. defaultValue: auto
-        theme: {
-          primary: "#00D1B2",
-        } as WHITE_LABEL_THEME,
-        useLogoLoader: true,
-      } as WhiteLabelData,
-      loginConfig:{
-        jwt: {
-          verifier: "klang", // Name of the verifier created on Web3Auth Dashboard
-          typeOfLogin: "jwt",
-          clientId: "b17dec48-2a07-4c12-9cda-8778d9209707", // Web3Auth Client ID
-        } 
-      }
-    },
-    loginSettings: {
-        mfaLevel: "optional"
-    },
-    privateKeyProvider,
-  });
-
-  web3Auth.configureAdapter(authAdapter);
+export async function initialize() {
+  web3auth.configureAdapter(authAdapter);
 
   const walletServicesPlugin = new WalletServicesPlugin();
 
-  web3Auth.addPlugin(walletServicesPlugin);
+  web3auth.addPlugin(walletServicesPlugin);
 
+  await web3auth.init();
+}
 
-  export async function initialize() {
-    await web3Auth.init();
+export const getConnectedAccount = async (): Promise<string> => {
+  let accounts: string[] = await request({
+    method: "eth_accounts",
+    params: [],
+  });
+
+  if (accounts.length == 0) {
+    throw new Error("No connected accounts found");
   }
 
-  export const web3AuthInstance = web3Auth;
+  return accounts[0];
+};
+
+export const getChain = async (): Promise<string> => {
+  let chainIdHex: string = await request({ method: "eth_chainId", params: [] });
+
+  return resolveChainId(parseInt(chainIdHex, 16));
+};
+
+export const signMessage = async (message: string): Promise<string> => {
+  let account = await getConnectedAccount();
+
+  let signature: string = await request({
+    method: "personal_sign",
+    params: [message, account],
+  });
+
+  return signature;
+};
+
+async function request<S, R>(args: RequestArguments<S>): Promise<R> {
+  if (!web3auth.connected) {
+    throw new Error("Web3Auth not connected");
+  }
+
+  let result = await web3auth.provider?.request<S, R>(args);
+
+  if (!result) {
+    throw new Error("Failed to make request: " + JSON.stringify(args));
+  }
+
+  return result as R;
+}
+
+export async function connect(
+  adapterType: WALLET_ADAPTER_TYPE,
+  loginParams: LoginParams
+) {
+  await web3auth.connectTo<LoginParams>(adapterType, loginParams);
+}
+
+export async function disconnect() {
+  await web3auth.logout();
+}
