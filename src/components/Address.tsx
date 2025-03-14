@@ -1,20 +1,30 @@
 import { useState, useEffect } from "react";
 
-import { getConnectedAccount } from "../web3auth";
+import { getConnectedAccountPair } from "../web3Auth";
 import Loading from "./Loading";
+import { AccountPair } from "../types/AccountPair";
 
 function Account() {
-  const [account, setAccount] = useState<string | null>(null);
+  const [account, setAccount] = useState<AccountPair | null>(null);
 
   useEffect(() => {
     const init = async () => {
-      setAccount(await getConnectedAccount());
+      setAccount(await getConnectedAccountPair());
     };
     init();
   }, []);
 
   return (
-    <div>{account ? <p>Connected Account: {account}</p> : <Loading />}</div>
+    <div>
+      {account ? (
+        <div>
+          <p>Smart Account: {account.smartAccount}</p>
+          <p>External Account: {account.externalAccount}</p>
+        </div>
+      ) : (
+        <Loading />
+      )}
+    </div>
   );
 }
 

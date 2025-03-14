@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { disconnect } from "../web3auth";
+import { disconnect } from "../web3Auth";
 
 async function logout(setIsLoading: (isLoading: boolean) => void) {
   try {

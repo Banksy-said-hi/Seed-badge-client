@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { WALLET_ADAPTERS } from "@web3auth/base";
 import crypto from "crypto";
 
-import { connect } from "../web3auth";
+import { connect } from "../web3Auth";
 import { oAuthClientId } from "../authConfig";
 import Loading from "./Loading";
 
@@ -49,9 +49,8 @@ async function handleRedirect(setLoading: (loading: boolean) => void) {
       await connect(WALLET_ADAPTERS.AUTH, {
         loginProvider: "jwt",
         extraLoginOptions: {
-          id_token: data.id_token,
+          id_token: data.access_token,
           verifierIdField: "sub",
-          domain: "https://login.seed.game/oauth2",
           redirectUrl: window.location.origin,
         },
       });

@@ -4,6 +4,7 @@ import Address from "./Address";
 import Network from "./Network";
 import { ConnectionState } from "../types/ConnectionState";
 import Loading from "./Loading";
+import Balance from "./Balance";
 
 interface UserPanelProps {
   connectionState: ConnectionState;
@@ -21,6 +22,7 @@ function UserPanel({ connectionState }: UserPanelProps) {
         <div>
           <Address />
           <Network />
+          <Balance />
           <Logout />
         </div>
       );
