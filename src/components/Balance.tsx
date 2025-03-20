@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Loading from "./Loading";
-import { getTokenBalanceWithSymbol } from "../web3Auth";
+import { getTokenBalanceWithSymbol } from "../api/web3Auth";
 
 function Balance() {
   const [tokenBalance, setTokenBalance] = useState<string | null>(null);

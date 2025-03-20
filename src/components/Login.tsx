@@ -1,21 +1,14 @@
 import { useState, useEffect } from "react";
 import { WALLET_ADAPTERS } from "@web3auth/base";
-import crypto from "crypto";
 
-import { connect } from "../web3Auth";
-import { oAuthClientId } from "../authConfig";
+import { connect } from "../api/web3Auth";
 import Loading from "./Loading";
+import { authorize, authenticate } from "../api/klang";
 
 async function login(setLoading: (loading: boolean) => void) {
   try {
     setLoading(true);
-    const { codeVerifier, codeChallenge } = generateCodeVerifier();
-    const authUrl = `https://login.seed.game/oauth2/authorize?response_type=code&client_id=${oAuthClientId}&redirect_uri=${encodeURIComponent(
-      window.location.origin
-    )}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-
-    window.localStorage.setItem("code_verifier", codeVerifier);
-    window.location.href = authUrl;
+    await authorize();
   } catch (error) {
     setLoading(false);
     throw error;
@@ -30,26 +23,13 @@ async function handleRedirect(setLoading: (loading: boolean) => void) {
   if (code && codeVerifier) {
     try {
       setLoading(true);
-      const response = await fetch("https://login.seed.game/oauth2/token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          grant_type: "authorization_code",
-          client_id: oAuthClientId,
-          code,
-          redirect_uri: window.location.origin,
-          code_verifier: codeVerifier,
-        }),
-      });
 
-      const data = await response.json();
+      const token = await authenticate(code, codeVerifier);
 
       await connect(WALLET_ADAPTERS.AUTH, {
         loginProvider: "jwt",
         extraLoginOptions: {
-          id_token: data.access_token,
+          id_token: token,
           verifierIdField: "sub",
           redirectUrl: window.location.origin,
         },
@@ -58,22 +38,6 @@ async function handleRedirect(setLoading: (loading: boolean) => void) {
       setLoading(false);
     }
   }
-}
-
-function generateCodeVerifier() {
-  const codeVerifier = crypto.randomBytes(32).toString("hex");
-  const codeChallenge = base64url(
-    crypto.createHash("sha256").update(codeVerifier).digest()
-  );
-  return { codeVerifier, codeChallenge };
-}
-
-function base64url(str: Buffer) {
-  return str
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
 }
 
 function Login() {
@@ -92,7 +56,12 @@ function Login() {
   return (
     <div>
       {isInitialized ? (
-        <button onClick={() => login(setLoading)} disabled={isLoading}>
+        <button
+          onClick={() => login(setLoading)}
+          className={`px-4 py-2 font-semibold text-white bg-blue-500 rounded ${
+            isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+          }`}
+        >
           Login with Klang
         </button>
       ) : (

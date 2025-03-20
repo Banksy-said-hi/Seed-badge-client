@@ -1,4 +1,4 @@
 export type AccountPair = {
-  smartAccount: string;
-  externalAccount: string;
-} | null;
+  smartAccount: `0x${string}`;
+  externalAccount: `0x${string}`;
+};

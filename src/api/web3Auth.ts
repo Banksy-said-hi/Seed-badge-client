@@ -1,0 +1,161 @@
+import { Web3AuthNoModal } from "@web3auth/no-modal";
+import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
+import {
+  ADAPTER_EVENTS,
+  RequestArguments,
+  WALLET_ADAPTER_TYPE,
+} from "@web3auth/base";
+import { LoginParams } from "@web3auth/auth-adapter";
+
+import { web3authOptions } from "../configs/web3authConfig";
+import { authAdapter } from "../configs/authConfig";
+import {
+  resolveChainId,
+  tokenAddress,
+  abiInterface,
+} from "../configs/chainConfig";
+import { AccountPair } from "../types/AccountPair";
+import { Token } from "../types/Token";
+
+export const web3Auth = new Web3AuthNoModal(web3authOptions);
+
+export let accountPair: Promise<AccountPair>;
+
+export let token: Promise<Token>;
+
+async function reset() {
+  accountPair = new Promise<AccountPair>((resolve) => {
+    web3Auth.on(ADAPTER_EVENTS.CONNECTED, async () => {
+      resolve(await getConnectedAccountPair());
+    });
+  });
+
+  token = new Promise<Token>((resolve) => {
+    web3Auth.on(ADAPTER_EVENTS.CONNECTED, async () => {
+      const symbol = await call<string>("symbol");
+
+      const decimals = await call<number>("decimals");
+
+      resolve({ symbol: symbol, decimals: decimals });
+    });
+  });
+}
+
+web3Auth.on(ADAPTER_EVENTS.DISCONNECTED, async () => {
+  reset();
+});
+
+export async function initialize() {
+  reset();
+
+  web3Auth.configureAdapter(authAdapter);
+
+  const walletServicesPlugin = new WalletServicesPlugin();
+
+  web3Auth.addPlugin(walletServicesPlugin);
+
+  await web3Auth.init();
+}
+
+const getConnectedAccountPair = async (): Promise<AccountPair> => {
+  let accounts: string[] = await request({
+    method: "eth_accounts",
+    params: [],
+  });
+
+  if (accounts.length < 2) {
+    throw new Error("No connected account pair found");
+  }
+
+  return {
+    smartAccount: accounts[0] as `0x${string}`,
+    externalAccount: accounts[1] as `0x${string}`,
+  };
+};
+
+export const getChain = async (): Promise<string> => {
+  let chainIdHex: string = await request({ method: "eth_chainId", params: [] });
+
+  return resolveChainId(parseInt(chainIdHex, 16));
+};
+
+export const signMessage = async (message: string): Promise<string> => {
+  let account = (await accountPair).smartAccount;
+
+  const signature: string = await request({
+    method: "personal_sign",
+    params: [message, account],
+  });
+
+  return signature;
+};
+
+async function request<S, R>(args: RequestArguments<S>): Promise<R> {
+  if (!web3Auth.connected) {
+    throw new Error("Web3Auth not connected");
+  }
+
+  let result = await web3Auth.provider?.request<S, R>(args);
+
+  if (!result) {
+    throw new Error("Failed to make request: " + JSON.stringify(args));
+  }
+
+  return result as R;
+}
+
+async function call<R>(
+  functionName: string,
+  functionParams?: ReadonlyArray<any>
+): Promise<R> {
+  const data = abiInterface.encodeFunctionData(functionName, functionParams);
+
+  const response = await request<{ to: `0x${string}`; data: string }[], string>(
+    {
+      method: "eth_call",
+      params: [
+        {
+          to: tokenAddress,
+          data: data,
+        },
+      ],
+    }
+  );
+
+  const result = abiInterface.decodeFunctionResult(
+    functionName,
+    response.toString()
+  );
+
+  return result as R;
+}
+
+export async function connect(
+  adapterType: WALLET_ADAPTER_TYPE,
+  loginParams: LoginParams
+) {
+  await web3Auth.connectTo<LoginParams>(adapterType, loginParams);
+}
+
+export async function disconnect() {
+  await web3Auth.logout();
+}
+
+export async function getTokenBalance() {
+  const account = (await accountPair).smartAccount;
+
+  return call<number>("balanceOf", [account]);
+}
+
+// 10 USDC
+export async function getTokenBalanceWithSymbol() {
+  const balance = await getTokenBalance();
+
+  return `${await formatUnits(balance)} ${(await token).symbol}`;
+}
+
+export async function formatUnits(value: number) {
+  const decimals = (await token).decimals;
+
+  return value / 10 ** decimals;
+}

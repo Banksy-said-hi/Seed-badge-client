@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { disconnect } from "../web3Auth";
+import { disconnect } from "../api/web3Auth";
 
 async function logout(setIsLoading: (isLoading: boolean) => void) {
   try {
@@ -15,9 +15,16 @@ function Logout() {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <button onClick={() => logout(setIsLoading)} disabled={isLoading}>
-      Logout
-    </button>
+    <div>
+      <button
+        onClick={() => logout(setIsLoading)}
+        className={`px-4 py-2 font-semibold text-white bg-blue-500 rounded ${
+          isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+        }`}
+      >
+        Logout
+      </button>
+    </div>
   );
 }
 

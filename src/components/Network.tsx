@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { getChain } from "../web3auth";
+import { getChain } from "../api/web3Auth";
 import Loading from "./Loading";
 
 function Network() {

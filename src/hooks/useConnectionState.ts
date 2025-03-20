@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ADAPTER_EVENTS } from "@web3auth/base";
 
-import { web3auth } from "../web3auth";
+import { web3Auth } from "../api/web3Auth";
 import { ConnectionState } from "../types/ConnectionState";
 
 export function useConnectionState() {
@@ -10,10 +10,10 @@ export function useConnectionState() {
   );
 
   useEffect(() => {
-    web3auth.on(ADAPTER_EVENTS.CONNECTED, () => {
+    web3Auth.on(ADAPTER_EVENTS.CONNECTED, () => {
       setConnectionState(ConnectionState.Connected);
     });
-    web3auth.on(ADAPTER_EVENTS.DISCONNECTED, () => {
+    web3Auth.on(ADAPTER_EVENTS.DISCONNECTED, () => {
       setConnectionState(ConnectionState.Disconnected);
     });
   });

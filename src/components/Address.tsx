@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { getConnectedAccountPair } from "../web3Auth";
+import { accountPair } from "../api/web3Auth";
 import Loading from "./Loading";
 import { AccountPair } from "../types/AccountPair";
 
@@ -9,7 +9,7 @@ function Account() {
 
   useEffect(() => {
     const init = async () => {
-      setAccount(await getConnectedAccountPair());
+      setAccount(await accountPair);
     };
     init();
   }, []);

@@ -5,6 +5,8 @@ import Network from "./Network";
 import { ConnectionState } from "../types/ConnectionState";
 import Loading from "./Loading";
 import Balance from "./Balance";
+import ReferralPanel from "./Referral/ReferralPanel";
+import Card from "./Card";
 
 interface UserPanelProps {
   connectionState: ConnectionState;
@@ -20,9 +22,17 @@ function UserPanel({ connectionState }: UserPanelProps) {
     case ConnectionState.Connected:
       content = (
         <div>
-          <Address />
-          <Network />
-          <Balance />
+          <Card
+            title="User Panel"
+            content={
+              <div>
+                <Address />
+                <Network />
+                <Balance />
+              </div>
+            }
+          />
+          <ReferralPanel />
           <Logout />
         </div>
       );
