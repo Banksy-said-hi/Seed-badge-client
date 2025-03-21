@@ -6,6 +6,7 @@ import { ConnectionState } from "../types/ConnectionState";
 import Loading from "./Loading";
 import Balance from "./Balance";
 import ReferralPanel from "./Referral/ReferralPanel";
+import TransferToken from "./TransferToken";
 import Card from "./Card";
 
 interface UserPanelProps {
@@ -33,6 +34,7 @@ function UserPanel({ connectionState }: UserPanelProps) {
             }
           />
           <ReferralPanel />
+          <TransferToken />
           <Logout />
         </div>
       );

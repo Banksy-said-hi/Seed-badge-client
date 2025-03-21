@@ -17,5 +17,5 @@ export const web3authOptions: IWeb3AuthCoreOptions = {
   storageKey: "local",
   privateKeyProvider,
   accountAbstractionProvider,
-  useAAWithExternalWallet: true,
+  useAAWithExternalWallet: false,
 };

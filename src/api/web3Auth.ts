@@ -9,13 +9,10 @@ import { LoginParams } from "@web3auth/auth-adapter";
 
 import { web3authOptions } from "../configs/web3authConfig";
 import { authAdapter } from "../configs/authConfig";
-import {
-  resolveChainId,
-  tokenAddress,
-  abiInterface,
-} from "../configs/chainConfig";
+import { resolveChainId } from "../configs/chainConfig";
 import { AccountPair } from "../types/AccountPair";
 import { Token } from "../types/Token";
+import { read, send } from "./contract";
 
 export const web3Auth = new Web3AuthNoModal(web3authOptions);
 
@@ -32,9 +29,9 @@ async function reset() {
 
   token = new Promise<Token>((resolve) => {
     web3Auth.on(ADAPTER_EVENTS.CONNECTED, async () => {
-      const symbol = await call<string>("symbol");
+      const symbol = await read<string>("symbol");
 
-      const decimals = await call<number>("decimals");
+      const decimals = await read<number>("decimals");
 
       resolve({ symbol: symbol, decimals: decimals });
     });
@@ -53,6 +50,11 @@ export async function initialize() {
   const walletServicesPlugin = new WalletServicesPlugin();
 
   web3Auth.addPlugin(walletServicesPlugin);
+
+  const urlParams = new URLSearchParams(window.location.search);
+
+  // For some reason web3Auth.init() removes the state from the URL query params
+  window.localStorage.setItem("oauth_state", urlParams.get("state") || "");
 
   await web3Auth.init();
 }
@@ -90,7 +92,7 @@ export const signMessage = async (message: string): Promise<string> => {
   return signature;
 };
 
-async function request<S, R>(args: RequestArguments<S>): Promise<R> {
+export async function request<S, R>(args: RequestArguments<S>): Promise<R> {
   if (!web3Auth.connected) {
     throw new Error("Web3Auth not connected");
   }
@@ -100,32 +102,6 @@ async function request<S, R>(args: RequestArguments<S>): Promise<R> {
   if (!result) {
     throw new Error("Failed to make request: " + JSON.stringify(args));
   }
-
-  return result as R;
-}
-
-async function call<R>(
-  functionName: string,
-  functionParams?: ReadonlyArray<any>
-): Promise<R> {
-  const data = abiInterface.encodeFunctionData(functionName, functionParams);
-
-  const response = await request<{ to: `0x${string}`; data: string }[], string>(
-    {
-      method: "eth_call",
-      params: [
-        {
-          to: tokenAddress,
-          data: data,
-        },
-      ],
-    }
-  );
-
-  const result = abiInterface.decodeFunctionResult(
-    functionName,
-    response.toString()
-  );
 
   return result as R;
 }
@@ -144,18 +120,31 @@ export async function disconnect() {
 export async function getTokenBalance() {
   const account = (await accountPair).smartAccount;
 
-  return call<number>("balanceOf", [account]);
+  return read<number>("balanceOf", [account]);
 }
 
 // 10 USDC
 export async function getTokenBalanceWithSymbol() {
   const balance = await getTokenBalance();
 
-  return `${await formatUnits(balance)} ${(await token).symbol}`;
+  return `${await formatUnitsFromBaseUnit(balance)} ${(await token).symbol}`;
 }
 
-export async function formatUnits(value: number) {
+export async function transferTokens(
+  to: string,
+  amount: bigint
+): Promise<string> {
+  return send("transfer", [to, amount]);
+}
+
+export async function formatUnitsFromBaseUnit(value: number) {
   const decimals = (await token).decimals;
 
-  return value / 10 ** decimals;
+  return BigInt(value) / 10n ** BigInt(decimals);
+}
+
+export async function formatUnitsToBaseUnit(value: number) {
+  const decimals = (await token).decimals;
+
+  return BigInt(value) * 10n ** BigInt(decimals);
 }

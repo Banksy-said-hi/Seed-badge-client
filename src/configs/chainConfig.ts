@@ -23,16 +23,21 @@ export const chainConfig = {
   logo: "https://res.coinpaper.com/coinpaper/optimism_logo_6eba6a0c5c.png",
 };
 
+// Get the pimlico API Key from dashboard.pimlico.io
+const pimlicoUrl = `https://api.pimlico.io/v2/${parseInt(
+  chainConfig.chainId,
+  16
+)}/rpc?apikey=${pimlicoAPIKey}`;
+
 export const accountAbstractionProvider = new AccountAbstractionProvider({
   config: {
     chainConfig,
     smartAccountInit: new SafeSmartAccount(),
     bundlerConfig: {
-      // Get the pimlico API Key from dashboard.pimlico.io
-      url: `https://api.pimlico.io/v2/${parseInt(
-        chainConfig.chainId,
-        16
-      )}/rpc?apikey=${pimlicoAPIKey}`,
+      url: pimlicoUrl,
+    },
+    paymasterConfig: {
+      url: pimlicoUrl,
     },
   },
 });

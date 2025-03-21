@@ -7,11 +7,11 @@ function Balance() {
   const [tokenBalance, setTokenBalance] = useState<string | null>(null);
 
   useEffect(() => {
-    const getBalance = async () => {
+    const getTokenBalance = async () => {
       setTokenBalance(await getTokenBalanceWithSymbol());
     };
 
-    getBalance();
+    getTokenBalance();
   });
 
   return (

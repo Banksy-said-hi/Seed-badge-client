@@ -5,10 +5,16 @@ import { ReferralStatus } from "../types/ReferralStatus";
 
 export async function authorize() {
   const { codeVerifier, codeChallenge } = generateCodeVerifier();
-  const authUrl = `https://login.seed.game/oauth2/authorize?response_type=code&client_id=${oAuthClientId}&redirect_uri=${encodeURIComponent(
-    window.location.origin
-  )}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
+  const state = crypto.randomBytes(16).toString("hex");
+
+  const authUrl = `https://login.seed.game/oauth2/authorize?client_id=${oAuthClientId}&redirect_uri=${encodeURIComponent(
+    window.location.origin
+  )}&response_type=code&scope=${encodeURIComponent(
+    "openid profile email offline_access"
+  )}&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+
+  window.localStorage.setItem("stored_oauth_state", state);
   window.localStorage.setItem("code_verifier", codeVerifier);
   window.location.href = authUrl;
 }
