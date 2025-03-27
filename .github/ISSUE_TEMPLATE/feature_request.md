@@ -1,20 +1,29 @@
 ---
-name: Feature request
+name: Feature
 about: Suggest an idea for this project
 title: ''
-labels: ''
+labels: 'Type: Feature'
+type: Feature
 assignees: ''
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**What**
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+Describe the issue.
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+**Why**
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+Why is this important/relevant
+
+**How**
+
+Ways (steps to take) to implement the issue.
+
+**Acceptance Criteria**
+
+A set of conditions that must be met for the work to be considered complete.
+
+**Estimation**
+
+Just put in a number relative to an anchor issue's estimation.
