@@ -1,0 +1,16 @@
+{
+  "rewards": [
+    {
+      "type": "active_all_week",
+      "requiredEvents": [
+        {
+          "eventType": "user_logged_in",
+          "amount": 7
+        }
+      ],
+      "payout": 2500000000,
+      "sponsored": false,
+      "validators": ["single_user", "referral", "active_all_week"]
+    }
+  ]
+}

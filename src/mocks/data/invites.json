@@ -1,0 +1,94 @@
+{
+  "invites": [
+    {
+      "username": "uniqueUser_001",
+      "events": [
+        {
+          "data": {
+            "type": "user_logged_in",
+            "timestamp": 1698233401,
+            "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+          },
+          "hash": ""
+        },
+        {
+          "data": {
+            "type": "user_logged_in",
+            "timestamp": 1698233502,
+            "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+          },
+          "hash": ""
+        },
+        {
+          "data": {
+            "type": "user_logged_in",
+            "timestamp": 1698233603,
+            "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+          },
+          "hash": ""
+        },
+        {
+          "data": {
+            "type": "user_logged_in",
+            "timestamp": 1698233704,
+            "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+          },
+          "hash": ""
+        },
+        {
+          "data": {
+            "type": "user_logged_in",
+            "timestamp": 1698233805,
+            "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+          },
+          "hash": ""
+        },
+        {
+          "data": {
+            "type": "user_logged_in",
+            "timestamp": 1698233906,
+            "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+          },
+          "hash": ""
+        },
+        {
+          "data": {
+            "type": "user_logged_in",
+            "timestamp": 1698234007,
+            "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+          },
+          "hash": ""
+        }
+      ]
+    },
+    {
+      "username": "uniqueUser_002",
+      "events": [
+        {
+          "data": {
+            "type": "user_logged_in",
+            "timestamp": 1698233704,
+            "userId": "b3c4d5e6-f7a8-9012-8901-234567890123"
+          },
+          "hash": ""
+        },
+        {
+          "data": {
+            "type": "society_joined",
+            "timestamp": 1698233805,
+            "userId": "b3c4d5e6-f7a8-9012-8901-234567890123"
+          },
+          "hash": ""
+        },
+        {
+          "data": {
+            "type": "seedling_created",
+            "timestamp": 1698233906,
+            "userId": "b3c4d5e6-f7a8-9012-8901-234567890123"
+          },
+          "hash": ""
+        }
+      ]
+    }
+  ]
+}

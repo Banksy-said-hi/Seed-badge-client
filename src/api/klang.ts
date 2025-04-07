@@ -1,7 +1,12 @@
 import crypto from "crypto";
+import { SeedEvent } from "../types/SeedEvent";
 
 import { oAuthClientId } from "../configs/authConfig";
-import { ReferralStatus } from "../types/ReferralStatus";
+import { SeedInvite } from "../types/SeedInvite";
+import { SeedReward } from "../types/SeedReward";
+
+// empty string for now since we're mocking the API calls
+const BASE_API_URL = "";
 
 export async function authorize() {
   const { codeVerifier, codeChallenge } = generateCodeVerifier();
@@ -55,20 +60,50 @@ function base64url(str: Buffer) {
     .replace(/=+$/, "");
 }
 
-export async function getReferralCode(): Promise<string> {
-  // TODO replace with actual value from Klang API
-  return "AXPYH";
-}
+async function apiFetch<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const url = `${BASE_API_URL}${endpoint}`;
 
-export async function sendReferralCode(code: string): Promise<boolean> {
-  if (code === "AAAAA") {
-    return false;
+  const defaultHeaders = {
+    "Content-Type": "application/json",
+    // Add token if available
+    Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+  };
+
+  const config: RequestInit = {
+    ...options,
+    headers: {
+      ...defaultHeaders,
+      ...(options.headers || {}),
+    },
+  };
+
+  const response = await fetch(url, config);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || `API request failed`);
   }
-  // TODO replace with actual value from Klang API
-  return true;
+
+  return await response.json();
 }
 
-export async function getReferralStatus(): Promise<ReferralStatus> {
-  // TODO replace with actual value from Klang API
-  return ReferralStatus.None;
+export async function getMyEvents(): Promise<SeedEvent[]> {
+  return await apiFetch<SeedEvent[]>("/api/events", {
+    method: "GET",
+  });
+}
+
+export async function getInvites(): Promise<SeedInvite[]> {
+  return await apiFetch<SeedInvite[]>("/api/invites", {
+    method: "GET",
+  });
+}
+
+export async function getRewards(): Promise<SeedReward[]> {
+  return await apiFetch<SeedReward[]>("/api/rewards", {
+    method: "GET",
+  });
 }
