@@ -1,21 +1,50 @@
+import { useEffect, useState } from "react";
+
+import { getEvents } from "../../api/klang";
 import { SeedEvent } from "../../types/SeedEvent";
-import Event from "./Event";
+import Card from "../Card";
+import Loading from "../Loading";
+import EventGroups from "./EventGroups";
+import Expandable from "../Expandable";
 
-interface EventsProps {
-  events: SeedEvent[];
-}
+function Events() {
+  const [eventsMap, setEventsMap] = useState<Map<string, SeedEvent[]> | null>(
+    null
+  );
 
-function Events({ events }: EventsProps) {
-  const counts = events.reduce((acc, event) => {
-    acc.set(event.data.type, (acc.get(event.data.type) || 0) + 1);
-    return acc;
-  }, new Map<string, number>());
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const data = await getEvents();
+      setEventsMap(data);
+    };
+
+    fetchEvents();
+  }, []);
 
   return (
     <div>
-      {Array.from(counts.entries()).map(([type, count]) => (
-        <Event key={type} eventType={type} eventCount={count} />
-      ))}
+      {eventsMap ? (
+        <Card
+          title="Events"
+          content={
+            <>
+              {Array.from(eventsMap.keys()).map((username) => {
+                return (
+                  <Expandable
+                    key={username}
+                    title={username}
+                    content={
+                      <EventGroups events={eventsMap.get(username) || []} />
+                    }
+                  />
+                );
+              })}
+            </>
+          }
+        />
+      ) : (
+        <Loading />
+      )}
     </div>
   );
 }

@@ -3,13 +3,8 @@ import {
   AccountAbstractionProvider,
   SafeSmartAccount,
 } from "@web3auth/account-abstraction-provider";
-import { ethers } from "ethers";
 
 const pimlicoAPIKey = "pim_XE7CUZced67FhiEqXyEJPZ";
-
-// TODO Replace with PETAL token address
-export const tokenAddress: `0x${string}` =
-  "0x5fd84259d66Cd46123540766Be93DFE6D43130D7";
 
 export const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
@@ -41,21 +36,6 @@ export const accountAbstractionProvider = new AccountAbstractionProvider({
     },
   },
 });
-
-const abi = [
-  // Read-Only Functions
-  "function balanceOf(address owner) view returns (uint256)",
-  "function decimals() view returns (uint8)",
-  "function symbol() view returns (string)",
-
-  // Authenticated Functions
-  "function transfer(address to, uint amount) returns (bool)",
-
-  // Events
-  "event Transfer(address indexed from, address indexed to, uint amount)",
-];
-
-export const abiInterface = new ethers.Interface(abi);
 
 const chainMap: { [key: number]: string } = {
   1: "Ethereum Mainnet",

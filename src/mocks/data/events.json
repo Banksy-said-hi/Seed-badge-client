@@ -1,84 +1,227 @@
-{
-  "events": [
-    {
-      "data": {
-        "type": "user_logged_in",
-        "timestamp": 1698232401,
-        "userId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+[
+  {
+    "username": "uniqueUser_001",
+    "events": [
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698232401,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5"
+        },
+        "hash": ""
       },
-      "hash": ""
-    },
-    {
-      "data": {
-        "type": "seedling_created",
-        "timestamp": 1698232502,
-        "userId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+      {
+        "data": {
+          "type": "seedling_created",
+          "timestamp": 1698232502,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5"
+        },
+        "hash": ""
       },
-      "hash": ""
-    },
-    {
-      "data": {
-        "type": "society_joined",
-        "timestamp": 1698232603,
-        "userId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+      {
+        "data": {
+          "type": "society_joined",
+          "timestamp": 1698232603,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5"
+        },
+        "hash": ""
       },
-      "hash": ""
-    },
-    {
-      "data": {
-        "type": "user_logged_in",
-        "timestamp": 1698232704,
-        "userId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698232704,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5"
+        },
+        "hash": ""
       },
-      "hash": ""
-    },
-    {
-      "data": {
-        "type": "user_logged_in",
-        "timestamp": 1698232805,
-        "userId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698232805,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5"
+        },
+        "hash": ""
       },
-      "hash": ""
-    },
-    {
-      "data": {
-        "type": "seedling_created",
-        "timestamp": 1698232906,
-        "userId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+      {
+        "data": {
+          "type": "seedling_created",
+          "timestamp": 1698232906,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5"
+        },
+        "hash": ""
       },
-      "hash": ""
-    },
-    {
-      "data": {
-        "type": "user_logged_in",
-        "timestamp": 1698233007,
-        "userId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698233007,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5"
+        },
+        "hash": ""
       },
-      "hash": ""
-    },
-    {
-      "data": {
-        "type": "society_joined",
-        "timestamp": 1698233108,
-        "userId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+      {
+        "data": {
+          "type": "society_joined",
+          "timestamp": 1698233108,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5"
+        },
+        "hash": ""
       },
-      "hash": ""
-    },
-    {
-      "data": {
-        "type": "user_logged_in",
-        "timestamp": 1698233209,
-        "userId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698233209,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5"
+        },
+        "hash": ""
       },
-      "hash": ""
-    },
-    {
-      "data": {
-        "type": "user_logged_in",
-        "timestamp": 1698233310,
-        "userId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698233310,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5"
+        },
+        "hash": ""
       },
-      "hash": ""
-    }
-  ]
-}
+      {
+        "data": {
+          "type": "seedling_has_another_seedling",
+          "timestamp": 1698232411,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5",
+          "seedlingId": 1298221,
+          "seederId": 1144346
+        },
+        "hash": ""
+      },
+      {
+        "data": {
+          "type": "seedling_has_another_seedling",
+          "timestamp": 1698233412,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5",
+          "seedlingId": 9876543,
+          "seederId": 1298221
+        },
+        "hash": ""
+      },
+      {
+        "data": {
+          "type": "seedling_has_another_seedling",
+          "timestamp": 1698233513,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5",
+          "seedlingId": 1234567,
+          "seederId": 9876543
+        },
+        "hash": ""
+      },
+      {
+        "data": {
+          "type": "seedling_has_another_seedling",
+          "timestamp": 1698233614,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5",
+          "seedlingId": 7654321,
+          "seederId": 1234567
+        },
+        "hash": ""
+      },
+      {
+        "data": {
+          "type": "seedling_has_another_seedling",
+          "timestamp": 1698233715,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5",
+          "seedlingId": 5432167,
+          "seederId": 7654321
+        },
+        "hash": ""
+      }
+    ]
+  },
+  {
+    "username": "uniqueUser_002",
+    "events": [
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698233401,
+          "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+        },
+        "hash": ""
+      },
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698233502,
+          "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+        },
+        "hash": ""
+      },
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698233603,
+          "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+        },
+        "hash": ""
+      },
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698233704,
+          "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+        },
+        "hash": ""
+      },
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698233805,
+          "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+        },
+        "hash": ""
+      },
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698233906,
+          "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+        },
+        "hash": ""
+      },
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698234007,
+          "userId": "e0f1a2b3-c4d5-6789-5678-901234567890"
+        },
+        "hash": ""
+      }
+    ]
+  },
+  {
+    "username": "uniqueUser_003",
+    "events": [
+      {
+        "data": {
+          "type": "user_logged_in",
+          "timestamp": 1698233704,
+          "userId": "b3c4d5e6-f7a8-9012-8901-234567890123"
+        },
+        "hash": ""
+      },
+      {
+        "data": {
+          "type": "society_joined",
+          "timestamp": 1698233805,
+          "userId": "b3c4d5e6-f7a8-9012-8901-234567890123"
+        },
+        "hash": ""
+      },
+      {
+        "data": {
+          "type": "seedling_created",
+          "timestamp": 1698233906,
+          "userId": "b3c4d5e6-f7a8-9012-8901-234567890123"
+        },
+        "hash": ""
+      }
+    ]
+  }
+]

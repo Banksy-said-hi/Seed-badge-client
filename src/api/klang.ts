@@ -2,11 +2,14 @@ import crypto from "crypto";
 import { SeedEvent } from "../types/SeedEvent";
 
 import { oAuthClientId } from "../configs/authConfig";
-import { SeedInvite } from "../types/SeedInvite";
 import { SeedReward } from "../types/SeedReward";
+import { CachedData } from "../types/CachedData";
+import { SeedRewardClaim } from "../types/SeedRewardClaim";
 
 // empty string for now since we're mocking the API calls
 const BASE_API_URL = "";
+
+const DEFAULT_API_CACHE_TIMEOUT = 60 * 60 * 1000; // Default to 1 hour
 
 export async function authorize() {
   const { codeVerifier, codeChallenge } = generateCodeVerifier();
@@ -62,8 +65,16 @@ function base64url(str: Buffer) {
 
 async function apiFetch<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  cacheResponse: boolean = false,
+  cacheTimeout: number = DEFAULT_API_CACHE_TIMEOUT
 ): Promise<T> {
+  const data = await fetchFromCache<T>(endpoint);
+
+  if (data) {
+    return data;
+  }
+
   const url = `${BASE_API_URL}${endpoint}`;
 
   const defaultHeaders = {
@@ -87,23 +98,89 @@ async function apiFetch<T>(
     throw new Error(error.message || `API request failed`);
   }
 
-  return await response.json();
+  const result: T = await response.json();
+
+  if (cacheResponse) {
+    cacheData<T>(endpoint, result, cacheTimeout);
+  }
+
+  return result;
 }
 
-export async function getMyEvents(): Promise<SeedEvent[]> {
-  return await apiFetch<SeedEvent[]>("/api/events", {
-    method: "GET",
-  });
+function cacheData<T>(key: string, data: T, timeout: number) {
+  const cachedData: CachedData = {
+    timestamp: Date.now(),
+    timeout: timeout,
+    data: JSON.stringify(data),
+  };
+
+  window.localStorage.setItem(key, JSON.stringify(cachedData));
 }
 
-export async function getInvites(): Promise<SeedInvite[]> {
-  return await apiFetch<SeedInvite[]>("/api/invites", {
-    method: "GET",
+async function fetchFromCache<T>(key: string): Promise<T | null> {
+  const data = window.localStorage.getItem(key);
+
+  if (data) {
+    try {
+      const cachedData = JSON.parse(data) as CachedData;
+
+      if (Date.now() - cachedData.timestamp < cachedData.timeout) {
+        try {
+          return JSON.parse(cachedData.data) as T;
+        } catch (innerError) {
+          console.error("Error parsing cached data content:", innerError);
+          return null;
+        }
+      } else {
+        // Cache expired, remove it
+        window.localStorage.removeItem(key);
+      }
+    } catch (error) {
+      console.error("Error parsing cached data:", error);
+      return null;
+    }
+  }
+
+  return null;
+}
+
+export async function getEvents(): Promise<Map<string, SeedEvent[]>> {
+  const data = await apiFetch<{ username: string; events: SeedEvent[] }[]>(
+    "/api/events",
+    {
+      method: "GET",
+    },
+    true
+  );
+
+  const map = new Map<string, SeedEvent[]>();
+
+  data.forEach((item) => {
+    map.set(item.username, item.events);
   });
+
+  return map;
 }
 
 export async function getRewards(): Promise<SeedReward[]> {
-  return await apiFetch<SeedReward[]>("/api/rewards", {
-    method: "GET",
-  });
+  return await apiFetch<SeedReward[]>(
+    "/api/rewards",
+    {
+      method: "GET",
+    },
+    true
+  );
+}
+
+export async function claimReward(
+  rewardClaim: SeedRewardClaim
+): Promise<string> {
+  return await apiFetch<string>(
+    "/api/rewards/claim",
+    {
+      method: "POST",
+      body: JSON.stringify(rewardClaim),
+    },
+    false
+  );
 }

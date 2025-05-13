@@ -12,13 +12,15 @@ import { authAdapter } from "../configs/authConfig";
 import { resolveChainId } from "../configs/chainConfig";
 import { AccountPair } from "../types/AccountPair";
 import { Token } from "../types/Token";
-import { read, send } from "./contract";
+import { tokenContract } from "../contracts/tokenContract";
 
 export const web3Auth = new Web3AuthNoModal(web3authOptions);
 
 export let accountPair: Promise<AccountPair>;
 
 export let token: Promise<Token>;
+
+export let verifierId: Promise<string>;
 
 async function reset() {
   accountPair = new Promise<AccountPair>((resolve) => {
@@ -29,11 +31,18 @@ async function reset() {
 
   token = new Promise<Token>((resolve) => {
     web3Auth.on(ADAPTER_EVENTS.CONNECTED, async () => {
-      const symbol = await read<string>("symbol");
+      const symbol = await tokenContract.read<string>("symbol");
 
-      const decimals = await read<number>("decimals");
+      const decimals = await tokenContract.read<number>("decimals");
 
       resolve({ symbol: symbol, decimals: decimals });
+    });
+  });
+
+  verifierId = new Promise<string>((resolve) => {
+    web3Auth.on(ADAPTER_EVENTS.CONNECTED, async () => {
+      const result = await web3Auth.getUserInfo();
+      resolve(result.verifierId || result.email || "");
     });
   });
 }
@@ -120,7 +129,7 @@ export async function disconnect() {
 export async function getTokenBalance() {
   const account = (await accountPair).smartAccount;
 
-  return read<number>("balanceOf", [account]);
+  return tokenContract.read<number>("balanceOf", [account]);
 }
 
 // 10 USDC
@@ -134,7 +143,7 @@ export async function transferTokens(
   to: string,
   amount: bigint
 ): Promise<string> {
-  return send("transfer", [to, amount]);
+  return tokenContract.send("transfer", [to, amount]);
 }
 
 export async function formatUnitsFromBaseUnit(value: number) {

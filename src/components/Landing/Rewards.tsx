@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 
 import { getRewards } from "../../api/klang";
 import { SeedReward } from "../../types/SeedReward";
-import Event from "./Event";
+import EventCompact from "./EventGroup";
 import Loading from "../Loading";
 import Card from "../Card";
+import Expandable from "../Expandable";
 
 function Rewards() {
   const [rewards, setRewards] = useState<SeedReward[] | null>(null);
@@ -26,7 +27,8 @@ function Rewards() {
           content={
             <>
               {rewards.map((reward) => (
-                <Card
+                <Expandable
+                  key={reward.type}
                   title={reward.type}
                   content={
                     <>
@@ -36,7 +38,7 @@ function Rewards() {
                           <>
                             {reward.requiredEvents.map((event) => {
                               return (
-                                <Event
+                                <EventCompact
                                   key={event.eventType}
                                   eventType={event.eventType}
                                   eventCount={event.amount}
@@ -50,7 +52,7 @@ function Rewards() {
                       <div>
                         Sponsored : {reward.sponsored ? "true" : "false"}
                       </div>
-                      <Card
+                      <Expandable
                         title="Validators"
                         content={
                           <>

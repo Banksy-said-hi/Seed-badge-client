@@ -3,7 +3,7 @@ export type SeedEvent = {
     type: string;
     timestamp: number;
     userId: string;
+    [key: string]: unknown; // Allows additional optional properties
   };
   hash: string;
-  // maybe add expiration date
 };
