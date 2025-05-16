@@ -14,22 +14,27 @@ Klang dApp is a React-based web application that brings blockchain functionality
 ## Installation
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/)
-- npm or yarn package manager
+- [Node.js](https://nodejs.org/) version >=20
 
 ### Steps
 1. **Clone the Repository**
    ```bash
    git clone https://github.com/ChainSafe/klang-dApp.git
    cd klang-dApp
+   ```
 2. **Install Dependencies**
-```bash
-npm install
-```
-3. **Start the Development Server**
-```bash
-npm run dev
-```
+   ```bash
+   corepack enable
+   yarn
+   ```
+3. **Build the Project**
+   ```bash
+   yarn build
+   ```
+4. **Start the Development Server**
+   ```bash
+   yarn dev
+   ```
 The application will run at http://localhost:5173.
 
 ## References
