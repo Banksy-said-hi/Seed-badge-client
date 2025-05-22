@@ -69,7 +69,7 @@ export async function initialize() {
 }
 
 const getConnectedAccountPair = async (): Promise<AccountPair> => {
-  let accounts: string[] = await request({
+  const accounts: string[] = await request({
     method: "eth_accounts",
     params: [],
   });
@@ -85,13 +85,13 @@ const getConnectedAccountPair = async (): Promise<AccountPair> => {
 };
 
 export const getChain = async (): Promise<string> => {
-  let chainIdHex: string = await request({ method: "eth_chainId", params: [] });
+  const chainIdHex: string = await request({ method: "eth_chainId", params: [] });
 
   return resolveChainId(parseInt(chainIdHex, 16));
 };
 
 export const signMessage = async (message: string): Promise<string> => {
-  let account = (await accountPair).smartAccount;
+  const account = (await accountPair).smartAccount;
 
   const signature: string = await request({
     method: "personal_sign",
@@ -106,7 +106,7 @@ export async function request<S, R>(args: RequestArguments<S>): Promise<R> {
     throw new Error("Web3Auth not connected");
   }
 
-  let result = await web3Auth.provider?.request<S, R>(args);
+  const result = await web3Auth.provider?.request<S, R>(args);
 
   if (!result) {
     throw new Error("Failed to make request: " + JSON.stringify(args));

@@ -1,11 +1,11 @@
 import Events from "./Events";
 import Rewards from "./Rewards";
-import SelectReward from "./ComposeReward/SelectReward";
+import {RewardsContainer} from "../../features/Rewards";
 
-function Landing() {
+export function Landing() {
   return (
     <div>
-      <SelectReward />
+      <RewardsContainer />
       <div className="flex">
         <div className="w-1/4">
           <Events />
@@ -17,5 +17,3 @@ function Landing() {
     </div>
   );
 }
-
-export default Landing;

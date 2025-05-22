@@ -7,7 +7,7 @@ import Loading from "./Loading";
 import Balance from "./Balance";
 import TransferToken from "./TransferToken";
 import Card from "./Card";
-import Landing from "./Landing/Landing";
+import {Landing} from "./Landing/Landing";
 
 interface UserPanelProps {
   connectionState: ConnectionState;

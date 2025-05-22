@@ -1,0 +1,21 @@
+import { useRewards } from "../../context/RewardsContext";
+import { SeedEvent } from "../../types/SeedEvent";
+import EventFull from "../../components/Landing/EventFull";
+
+
+export function AddEvent({
+  username,
+  event,
+}: {
+  username: string;
+  event: SeedEvent;
+}) {
+  const { addEvent } = useRewards();
+
+  return (
+    <>
+      <EventFull event={event} />
+      <button onClick={() => addEvent(username, event)}>+</button>
+    </>
+  );
+}
