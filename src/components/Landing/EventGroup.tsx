@@ -1,7 +1,7 @@
-interface EventProps {
+type EventProps = {
   eventType: string;
   eventCount: number;
-}
+};
 
 function EventGroup({ eventType, eventCount }: EventProps) {
   return (

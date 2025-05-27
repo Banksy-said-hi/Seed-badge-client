@@ -1,13 +1,7 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { getEvents, claimReward } from "../api/klang";
 import { getRewards } from "../api/klang";
-import {
+import type {
   SeedReward,
   SeedEvent,
   SeedRewardClaimDisplay,
@@ -15,7 +9,7 @@ import {
 } from "../types/index";
 import { accountPair } from "../api/web3Auth";
 
-interface RewardsContextType {
+type RewardsContextType = {
   isLoading: boolean;
   rewards: SeedReward[] | null;
   selectedReward: SeedReward | null;
@@ -28,7 +22,7 @@ interface RewardsContextType {
   addEvent: (username: string, event: SeedEvent) => void;
   removeEvent: (username: string, event: SeedEvent) => void;
   resetClaimResult: () => void;
-}
+};
 
 const RewardsContext = createContext<RewardsContextType | null>(null);
 
@@ -36,15 +30,9 @@ export function RewardsProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [rewards, setRewards] = useState<SeedReward[] | null>(null);
   const [selectedReward, setSelectedReward] = useState<SeedReward | null>(null);
-  const [rewardClaim, setRewardClaim] = useState<SeedRewardClaimDisplay | null>(
-    null
-  );
-  const [eventsMap, setEventsMap] = useState<Map<string, SeedEvent[]> | null>(
-    null
-  );
-  const [claimResult, setClaimResult] = useState<RewardClaimResult | null>(
-    null
-  );
+  const [rewardClaim, setRewardClaim] = useState<SeedRewardClaimDisplay | null>(null);
+  const [eventsMap, setEventsMap] = useState<Map<string, SeedEvent[]> | null>(null);
+  const [claimResult, setClaimResult] = useState<RewardClaimResult | null>(null);
 
   useEffect(() => {
     const fetchRewards = async () => {
@@ -55,9 +43,7 @@ export function RewardsProvider({ children }: { children: React.ReactNode }) {
 
   const handleRewardSelection = useCallback(
     async (rewardType: string) => {
-      const currentSelectedReward = rewards?.find(
-        (reward) => reward.type === rewardType
-      );
+      const currentSelectedReward = rewards?.find((reward) => reward.type === rewardType);
 
       setSelectedReward(currentSelectedReward || null);
 
@@ -69,7 +55,7 @@ export function RewardsProvider({ children }: { children: React.ReactNode }) {
 
       setEventsMap((await getEvents()) || new Map<string, SeedEvent[]>());
     },
-    [rewards]
+    [rewards],
   );
 
   const validate = useCallback((): boolean => {
@@ -79,9 +65,7 @@ export function RewardsProvider({ children }: { children: React.ReactNode }) {
       let count = 0;
 
       Array.from(rewardClaim.eventsMap.entries()).forEach(([_, events]) => {
-        count += events.filter(
-          (e) => e.data.type === requiredEvent.eventType
-        ).length;
+        count += events.filter((e) => e.data.type === requiredEvent.eventType).length;
       });
 
       if (count !== requiredEvent.amount) {
@@ -119,7 +103,7 @@ export function RewardsProvider({ children }: { children: React.ReactNode }) {
       const updatedMap = new Map(eventsMap);
       updatedMap.set(
         username,
-        (updatedMap.get(username) || []).filter((e) => e !== event)
+        (updatedMap.get(username) || []).filter((e) => e !== event),
       );
       setEventsMap(updatedMap);
 
@@ -135,7 +119,7 @@ export function RewardsProvider({ children }: { children: React.ReactNode }) {
       updatedRewardClaim.eventsMap.get(username)?.push(event);
       setRewardClaim(updatedRewardClaim);
     },
-    [eventsMap, rewardClaim, setEventsMap, setRewardClaim]
+    [eventsMap, rewardClaim, setEventsMap, setRewardClaim],
   );
 
   const removeEvent = useCallback(
@@ -153,13 +137,11 @@ export function RewardsProvider({ children }: { children: React.ReactNode }) {
 
       updatedRewardClaim.eventsMap.set(
         username,
-        updatedRewardClaim.eventsMap
-          .get(username)
-          ?.filter((e) => e !== event) || []
+        updatedRewardClaim.eventsMap.get(username)?.filter((e) => e !== event) || [],
       );
       setRewardClaim(updatedRewardClaim);
     },
-    [eventsMap, rewardClaim, setEventsMap, setRewardClaim]
+    [eventsMap, rewardClaim, setEventsMap, setRewardClaim],
   );
 
   const resetClaimResult = useCallback(() => {
@@ -183,9 +165,7 @@ export function RewardsProvider({ children }: { children: React.ReactNode }) {
     removeEvent,
     resetClaimResult,
   };
-  return (
-    <RewardsContext.Provider value={value}>{children}</RewardsContext.Provider>
-  );
+  return <RewardsContext.Provider value={value}>{children}</RewardsContext.Provider>;
 }
 
 export function useRewards() {

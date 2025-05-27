@@ -32,5 +32,5 @@ const contractABI = [
 
 export const rewardIssuerContract = new RewardIssuerContract(
   contractAddress,
-  new ethers.Interface(contractABI)
+  new ethers.Interface(contractABI),
 );

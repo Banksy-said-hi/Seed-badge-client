@@ -1,4 +1,5 @@
-import { IWeb3AuthCoreOptions, WEB3AUTH_NETWORK } from "@web3auth/base";
+import type { IWeb3AuthCoreOptions } from "@web3auth/base";
+import { WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { chainConfig, accountAbstractionProvider } from "./chainConfig";
 

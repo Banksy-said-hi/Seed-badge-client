@@ -7,11 +7,11 @@ import Loading from "./Loading";
 import Balance from "./Balance";
 import TransferToken from "./TransferToken";
 import Card from "./Card";
-import {Landing} from "./Landing/Landing";
+import { Landing } from "./Landing/Landing";
 
-interface UserPanelProps {
+type UserPanelProps = {
   connectionState: ConnectionState;
-}
+};
 
 function UserPanel({ connectionState }: UserPanelProps) {
   let content;

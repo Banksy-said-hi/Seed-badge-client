@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 
 import { getEvents } from "../../api/klang";
-import { SeedEvent } from "../../types/index";
+import type { SeedEvent } from "../../types/index";
 import Card from "../Card";
 import Loading from "../Loading";
 import EventGroups from "./EventGroups";
 import Expandable from "../Expandable";
 
 function Events() {
-  const [eventsMap, setEventsMap] = useState<Map<string, SeedEvent[]> | null>(
-    null
-  );
+  const [eventsMap, setEventsMap] = useState<Map<string, SeedEvent[]> | null>(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -33,9 +31,7 @@ function Events() {
                   <Expandable
                     key={username}
                     title={username}
-                    content={
-                      <EventGroups events={eventsMap.get(username) || []} />
-                    }
+                    content={<EventGroups events={eventsMap.get(username) || []} />}
                   />
                 );
               })}

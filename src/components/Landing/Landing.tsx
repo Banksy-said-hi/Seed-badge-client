@@ -1,6 +1,6 @@
 import Events from "./Events";
 import Rewards from "./Rewards";
-import {RewardsContainer} from "../../features/Rewards";
+import { RewardsContainer } from "../../features/Rewards";
 
 export function Landing() {
   return (

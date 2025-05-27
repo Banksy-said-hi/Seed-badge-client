@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import type { ethers } from "ethers";
 import { accountPair, request } from "../api/web3Auth";
 
 export class Contract {
@@ -13,12 +13,9 @@ export class Contract {
   async call<R>(
     methodName: string,
     functionName: string,
-    functionParams?: ReadonlyArray<any>
+    functionParams?: ReadonlyArray<unknown>,
   ): Promise<R> {
-    const data = this.abiInterface.encodeFunctionData(
-      functionName,
-      functionParams
-    );
+    const data = this.abiInterface.encodeFunctionData(functionName, functionParams);
 
     const account = (await accountPair).smartAccount;
 
@@ -54,29 +51,16 @@ export class Contract {
       return response as R;
     }
 
-    const result = this.abiInterface.decodeFunctionResult(
-      functionName,
-      response
-    );
+    const result = this.abiInterface.decodeFunctionResult(functionName, response);
 
     return result as R;
   }
 
-  async read<R>(
-    functionName: string,
-    functionParams?: ReadonlyArray<any>
-  ): Promise<R> {
+  async read<R>(functionName: string, functionParams?: ReadonlyArray<unknown>): Promise<R> {
     return this.call<R>("eth_call", functionName, functionParams);
   }
 
-  async send(
-    functionName: string,
-    functionParams?: ReadonlyArray<any>
-  ): Promise<string> {
-    return this.call<string>(
-      "eth_sendTransaction",
-      functionName,
-      functionParams
-    );
+  async send(functionName: string, functionParams?: ReadonlyArray<unknown>): Promise<string> {
+    return this.call<string>("eth_sendTransaction", functionName, functionParams);
   }
 }

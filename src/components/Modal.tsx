@@ -1,10 +1,10 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
-interface ModalProps {
+type ModalProps = {
   title: string;
   children?: ReactNode;
   onClose: () => void;
-}
+};
 
 export function Modal({ title, children, onClose }: ModalProps) {
   return (
@@ -17,9 +17,7 @@ export function Modal({ title, children, onClose }: ModalProps) {
           &times;
         </button>
         <h2 className="text-xl font-bold mb-2 text-black">{title}</h2>
-        {children && (
-          <div className="text-gray-700 mb-4 break-words">{children}</div>
-        )}
+        {children && <div className="text-gray-700 mb-4 break-words">{children}</div>}
       </div>
     </div>
   );

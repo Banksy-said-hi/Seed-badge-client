@@ -4,7 +4,6 @@ import Expandable from "../../components/Expandable";
 import { useRewards } from "../../context/RewardsContext";
 import { RemoveEvent } from "./RemoveEvent";
 
-
 export function ClaimedRewards() {
   const { selectedReward, rewardClaim, validate, handleClaim } = useRewards();
 
@@ -29,11 +28,7 @@ export function ClaimedRewards() {
                   <>
                     {Array.from(rewardClaim.eventsMap.entries()).map((entry) => {
                       return entry[1].map((event, index) => (
-                        <RemoveEvent
-                          key={index}
-                          username={entry[0]}
-                          event={event}
-                        />
+                        <RemoveEvent key={index} username={entry[0]} event={event} />
                       ));
                     })}
                   </>

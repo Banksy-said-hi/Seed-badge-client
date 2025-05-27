@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import { accountPair } from "../api/web3Auth";
 import Loading from "./Loading";
-import { AccountPair } from "../types/AccountPair";
+import type { AccountPair } from "../types/AccountPair";
 
 function Account() {
   const [account, setAccount] = useState<AccountPair | null>(null);

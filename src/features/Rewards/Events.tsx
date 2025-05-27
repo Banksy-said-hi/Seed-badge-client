@@ -3,7 +3,6 @@ import Card from "../../components/Card";
 import { useRewards } from "../../context/RewardsContext";
 import { AddEvent } from "./AddEvent";
 
-
 export function Events() {
   const { selectedReward, eventsMap, rewardClaim } = useRewards();
 
@@ -15,14 +14,13 @@ export function Events() {
       content={
         <>
           {selectedReward.requiredEvents.map((event, index) => {
-            const filteredEventsMap = Array.from(eventsMap.entries()).filter(
-              ([_, events]) => events.some((e) => e.data.type === event.eventType)
+            const filteredEventsMap = Array.from(eventsMap.entries()).filter(([_, events]) =>
+              events.some((e) => e.data.type === event.eventType),
             );
 
             const count = filteredEventsMap.reduce(
-              (c, [_, events]) =>
-                c + events.filter((e) => e.data.type === event.eventType).length,
-              0
+              (c, [_, events]) => c + events.filter((e) => e.data.type === event.eventType).length,
+              0,
             );
 
             return (
@@ -40,11 +38,7 @@ export function Events() {
                             {events
                               .filter((e) => e.data.type === event.eventType)
                               .map((e, index) => (
-                                <AddEvent
-                                  key={index}
-                                  username={username}
-                                  event={e}
-                                />
+                                <AddEvent key={index} username={username} event={e} />
                               ))}
                           </>
                         }

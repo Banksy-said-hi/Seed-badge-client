@@ -1,4 +1,4 @@
-import { SeedEvent } from "../../types/index";
+import type { SeedEvent } from "../../types/index";
 import Expandable from "../Expandable";
 
 function EventFull({ event }: { event: SeedEvent }) {

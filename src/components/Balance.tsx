@@ -19,11 +19,7 @@ function Balance() {
     });
   });
 
-  return (
-    <div>
-      {tokenBalance ? <p>Token Balance : {tokenBalance}</p> : <Loading />}
-    </div>
-  );
+  return <div>{tokenBalance ? <p>Token Balance : {tokenBalance}</p> : <Loading />}</div>;
 }
 
 export default Balance;

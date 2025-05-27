@@ -53,16 +53,13 @@ function RewardsContent() {
                     <Loading />
                   )}
                   {claimResult && (
-                    <Modal
-                      title="Reward Claim Successful"
-                      onClose={() => resetClaimResult()}
-                    >
+                    <Modal title="Reward Claim Successful" onClose={() => resetClaimResult()}>
                       <p>
                         View Transaction on{" "}
                         <a
                           href={`${new URL(
                             `tx/${claimResult.hash}`,
-                            chainConfig.blockExplorerUrl
+                            chainConfig.blockExplorerUrl,
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"

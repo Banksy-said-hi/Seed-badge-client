@@ -9,10 +9,8 @@ const pimlicoAPIKey = "pim_XE7CUZced67FhiEqXyEJPZ";
 export const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
   chainId: "0xaa37dc", // Please use 0x1 for Mainnet
-  rpcTarget:
-    "https://optimism-sepolia.infura.io/v3/06f3f78b0f324d9c8cde54f90cd4fb5b",
-  wsTarget:
-    "wss://optimism-sepolia.infura.io/ws/v3/06f3f78b0f324d9c8cde54f90cd4fb5b",
+  rpcTarget: "https://optimism-sepolia.infura.io/v3/06f3f78b0f324d9c8cde54f90cd4fb5b",
+  wsTarget: "wss://optimism-sepolia.infura.io/ws/v3/06f3f78b0f324d9c8cde54f90cd4fb5b",
   displayName: "Optimism Sepolia",
   blockExplorerUrl: "https://sepolia-optimism.etherscan.io/",
   ticker: "ETH",
@@ -23,7 +21,7 @@ export const chainConfig = {
 // Get the pimlico API Key from dashboard.pimlico.io
 const pimlicoUrl = `https://api.pimlico.io/v2/${parseInt(
   chainConfig.chainId,
-  16
+  16,
 )}/rpc?apikey=${pimlicoAPIKey}`;
 
 export const accountAbstractionProvider = new AccountAbstractionProvider({

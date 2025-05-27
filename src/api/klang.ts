@@ -1,13 +1,8 @@
 import crypto from "crypto";
 
-import {
-  SeedEvent,
-  SeedReward,
-  RewardClaimResult,
-  SeedRewardClaim,
-} from "../types/index";
+import type { SeedEvent, SeedReward, RewardClaimResult, SeedRewardClaim } from "../types/index";
 import { oAuthClientId } from "../configs/authConfig";
-import { CachedData } from "../types/CachedData";
+import type { CachedData } from "../types/CachedData";
 
 // empty string for now since we're mocking the API calls
 const BASE_API_URL = "";
@@ -20,9 +15,9 @@ export async function authorize() {
   const state = crypto.randomBytes(16).toString("hex");
 
   const authUrl = `https://login.seed.game/oauth2/authorize?client_id=${oAuthClientId}&redirect_uri=${encodeURIComponent(
-    window.location.origin
+    window.location.origin,
   )}&response_type=code&scope=${encodeURIComponent(
-    "openid profile email offline_access"
+    "openid profile email offline_access",
   )}&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
   window.localStorage.setItem("stored_oauth_state", state);
@@ -52,25 +47,19 @@ export async function authenticate(code: string, codeVerifier: string) {
 
 function generateCodeVerifier() {
   const codeVerifier = crypto.randomBytes(32).toString("hex");
-  const codeChallenge = base64url(
-    crypto.createHash("sha256").update(codeVerifier).digest()
-  );
+  const codeChallenge = base64url(crypto.createHash("sha256").update(codeVerifier).digest());
   return { codeVerifier, codeChallenge };
 }
 
 function base64url(str: Buffer) {
-  return str
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+  return str.toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
 async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {},
   cacheResponse: boolean = false,
-  cacheTimeout: number = DEFAULT_API_CACHE_TIMEOUT
+  cacheTimeout: number = DEFAULT_API_CACHE_TIMEOUT,
 ): Promise<T> {
   const data = await fetchFromCache<T>(endpoint);
 
@@ -153,7 +142,7 @@ export async function getEvents(): Promise<Map<string, SeedEvent[]>> {
     {
       method: "GET",
     },
-    true
+    true,
   );
 
   const map = new Map<string, SeedEvent[]>();
@@ -171,19 +160,17 @@ export async function getRewards(): Promise<SeedReward[]> {
     {
       method: "GET",
     },
-    true
+    true,
   );
 }
 
-export async function claimReward(
-  rewardClaim: SeedRewardClaim
-): Promise<RewardClaimResult> {
+export async function claimReward(rewardClaim: SeedRewardClaim): Promise<RewardClaimResult> {
   return await apiFetch<RewardClaimResult>(
     "/api/rewards/claim",
     {
       method: "POST",
       body: JSON.stringify(rewardClaim),
     },
-    false
+    false,
   );
 }

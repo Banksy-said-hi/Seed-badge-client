@@ -34,25 +34,18 @@ function TransferToken() {
             className="p-2 border rounded w-full"
             placeholder="Address"
             value={toAddress}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setToAddress(e.target.value)
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToAddress(e.target.value)}
           ></input>
           <div className="flex w-full items-center space-x-2">
             <input
               className="p-2 border rounded w-full"
               placeholder="Amount"
               value={amount}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setAmount(e.target.value)
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAmount(e.target.value)}
             ></input>
             <p>{symbol}</p>
           </div>
-          <button
-            onClick={transfer}
-            className="p-2 bg-blue-500 text-white rounded"
-          >
+          <button onClick={transfer} className="p-2 bg-blue-500 text-white rounded">
             Transfer
           </button>
         </div>

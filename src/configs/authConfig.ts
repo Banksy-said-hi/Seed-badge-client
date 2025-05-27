@@ -1,9 +1,6 @@
 import { UX_MODE } from "@web3auth/auth-adapter";
-import {
-  AuthAdapter,
-  WHITE_LABEL_THEME,
-  WhiteLabelData,
-} from "@web3auth/auth-adapter";
+import type { WHITE_LABEL_THEME, WhiteLabelData } from "@web3auth/auth-adapter";
+import { AuthAdapter } from "@web3auth/auth-adapter";
 import { privateKeyProvider } from "./web3authConfig";
 
 export const oAuthClientId = "b17dec48-2a07-4c12-9cda-8778d9209707";

@@ -21,8 +21,7 @@ async function handleRedirect(setLoading: (loading: boolean) => void) {
   const codeVerifier = window.localStorage.getItem("code_verifier");
 
   // The state query parameter gets removed by web3Auth.init() so we save it in localStorage
-  const state =
-    urlParams.get("state") || window.localStorage.getItem("oauth_state");
+  const state = urlParams.get("state") || window.localStorage.getItem("oauth_state");
 
   const storedState = window.localStorage.getItem("stored_oauth_state");
 

@@ -1,10 +1,10 @@
 import "./Card.css";
-import { JSX } from "react";
+import type { JSX } from "react";
 
-interface CardProps {
+type CardProps = {
   title?: string;
   content?: JSX.Element;
-}
+};
 
 function Card({ title, content }: CardProps) {
   return (

@@ -1,18 +1,13 @@
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { WalletServicesPlugin } from "@web3auth/wallet-services-plugin";
-import {
-  ADAPTER_EVENTS,
-  RequestArguments,
-  WALLET_ADAPTER_TYPE,
-} from "@web3auth/base";
-import { LoginParams } from "@web3auth/auth-adapter";
+import { ADAPTER_EVENTS, type RequestArguments, type WALLET_ADAPTER_TYPE } from "@web3auth/base";
+import type { LoginParams } from "@web3auth/auth-adapter";
 
 import { web3authOptions } from "../configs/web3authConfig";
 import { authAdapter } from "../configs/authConfig";
 import { resolveChainId } from "../configs/chainConfig";
-import { AccountPair } from "../types/AccountPair";
-import { Token } from "../types/Token";
 import { tokenContract } from "../contracts/tokenContract";
+import type { AccountPair, Token } from "../types";
 
 export const web3Auth = new Web3AuthNoModal(web3authOptions);
 
@@ -85,7 +80,10 @@ const getConnectedAccountPair = async (): Promise<AccountPair> => {
 };
 
 export const getChain = async (): Promise<string> => {
-  const chainIdHex: string = await request({ method: "eth_chainId", params: [] });
+  const chainIdHex: string = await request({
+    method: "eth_chainId",
+    params: [],
+  });
 
   return resolveChainId(parseInt(chainIdHex, 16));
 };
@@ -115,10 +113,7 @@ export async function request<S, R>(args: RequestArguments<S>): Promise<R> {
   return result as R;
 }
 
-export async function connect(
-  adapterType: WALLET_ADAPTER_TYPE,
-  loginParams: LoginParams
-) {
+export async function connect(adapterType: WALLET_ADAPTER_TYPE, loginParams: LoginParams) {
   await web3Auth.connectTo<LoginParams>(adapterType, loginParams);
 }
 
@@ -139,10 +134,7 @@ export async function getTokenBalanceWithSymbol() {
   return `${await formatUnitsFromBaseUnit(balance)} ${(await token).symbol}`;
 }
 
-export async function transferTokens(
-  to: string,
-  amount: bigint
-): Promise<string> {
+export async function transferTokens(to: string, amount: bigint): Promise<string> {
   return tokenContract.send("transfer", [to, amount]);
 }
 

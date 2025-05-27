@@ -1,6 +1,6 @@
-interface InputErrorProps {
+type InputErrorProps = {
   message: string | null;
-}
+};
 
 function InputError({ message }: InputErrorProps) {
   return (

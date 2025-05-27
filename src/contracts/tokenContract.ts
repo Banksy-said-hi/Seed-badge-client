@@ -3,8 +3,7 @@ import { Contract } from "./contract";
 import { accountPair } from "../api/web3Auth";
 import { chainConfig } from "../configs/chainConfig";
 
-const tokenAddress: `0x${string}` =
-  "0x3C1adF0A04792CF870DdA5F01a6EABE503e82B12";
+const tokenAddress: `0x${string}` = "0x3C1adF0A04792CF870DdA5F01a6EABE503e82B12";
 
 const erc20Abi = [
   // Read-Only Functions
@@ -28,9 +27,7 @@ class TokenContract extends Contract {
     this.ethersContract = new ethers.Contract(address, abiInterface, provider);
   }
 
-  async onTransfer(
-    callback: (from: string, to: string, amount: bigint) => void
-  ) {
+  async onTransfer(callback: (from: string, to: string, amount: bigint) => void) {
     const account = (await accountPair).smartAccount;
 
     this.ethersContract.on("Transfer", (from, to, amount) => {

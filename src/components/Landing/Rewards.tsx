@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { getRewards } from "../../api/klang";
-import { SeedReward } from "../../types/index";
+import type { SeedReward } from "../../types/index";
 import EventCompact from "./EventGroup";
 import Loading from "../Loading";
 import Card from "../Card";
@@ -49,9 +49,7 @@ function Rewards() {
                         }
                       />
                       <div>Payout : {reward.payout}</div>
-                      <div>
-                        Sponsored : {reward.sponsored ? "true" : "false"}
-                      </div>
+                      <div>Sponsored : {reward.sponsored ? "true" : "false"}</div>
                       <Expandable
                         title="Validators"
                         content={

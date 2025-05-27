@@ -6,7 +6,7 @@ import { ConnectionState } from "../types/ConnectionState";
 
 export function useConnectionState() {
   const [connectionState, setConnectionState] = useState<ConnectionState>(
-    ConnectionState.Initializing
+    ConnectionState.Initializing,
   );
 
   useEffect(() => {
