@@ -3,10 +3,20 @@ import { RewardsProvider, useRewards } from "../../context/RewardsContext";
 import Loading from "../../components/Loading";
 import { ClaimedRewards } from "./ClaimedRewards";
 import { Events } from "./Events";
-
+import { Modal } from "../../components/Modal";
+import { chainConfig } from "../../configs/chainConfig";
 
 function RewardsContent() {
-  const { rewards, handleRewardSelection, eventsMap, rewardClaim, selectedReward } = useRewards();
+  const {
+    isLoading,
+    rewards,
+    claimResult,
+    handleRewardSelection,
+    eventsMap,
+    rewardClaim,
+    selectedReward,
+    resetClaimResult,
+  } = useRewards();
 
   return (
     <Card
@@ -18,28 +28,52 @@ function RewardsContent() {
             defaultValue=""
             onChange={(event) => handleRewardSelection(event.target.value)}
           >
-            <option value="" disabled>
+            <option className="hidden" value="" disabled>
               Select a reward
             </option>
             {rewards?.map((reward, index) => (
-              <option key={index} value={reward.type}>
+              <option className="bg-black" key={index} value={reward.type}>
                 {reward.type}
               </option>
             ))}
           </select>
           <Card
-            title="Compose Reward"
+            title="Compose Reward Claim"
             content={
-              <>
-                {eventsMap && rewardClaim && selectedReward ? (
-                  <div className="flex space-x-4">
-                    <ClaimedRewards />
-                    <Events />
-                  </div>
-                ) : (
-                  <Loading />
-                )}
-              </>
+              isLoading ? (
+                <Loading />
+              ) : (
+                <>
+                  {eventsMap && rewardClaim && selectedReward ? (
+                    <div className="flex space-x-4">
+                      <ClaimedRewards />
+                      <Events />
+                    </div>
+                  ) : (
+                    <Loading />
+                  )}
+                  {claimResult && (
+                    <Modal
+                      title="Reward Claim Successful"
+                      onClose={() => resetClaimResult()}
+                    >
+                      <p>
+                        View Transaction on{" "}
+                        <a
+                          href={`${new URL(
+                            `tx/${claimResult.hash}`,
+                            chainConfig.blockExplorerUrl
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Block Explorer
+                        </a>
+                      </p>
+                    </Modal>
+                  )}
+                </>
+              )
             }
           />
         </div>

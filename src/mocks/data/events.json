@@ -4,6 +4,14 @@
     "events": [
       {
         "data": {
+          "type": "user_registered",
+          "timestamp": 1698232401,
+          "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5"
+        },
+        "hash": ""
+      },
+      {
+        "data": {
           "type": "user_logged_in",
           "timestamp": 1698232401,
           "userId": "d69b40b5-0bb6-45f9-bc15-9e838770a5b5"

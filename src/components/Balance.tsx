@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import Loading from "./Loading";
 import { getTokenBalanceWithSymbol } from "../api/web3Auth";
+import { tokenContract } from "../contracts/tokenContract";
 
 function Balance() {
   const [tokenBalance, setTokenBalance] = useState<string | null>(null);
@@ -12,6 +13,10 @@ function Balance() {
     };
 
     getTokenBalance();
+
+    tokenContract.onTransfer(async () => {
+      await getTokenBalance();
+    });
   });
 
   return (

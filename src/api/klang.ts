@@ -5,6 +5,7 @@ import { oAuthClientId } from "../configs/authConfig";
 import { SeedReward } from "../types/SeedReward";
 import { CachedData } from "../types/CachedData";
 import { SeedRewardClaim } from "../types/SeedRewardClaim";
+import { RewardClaimResult } from "../types/RewardClaimResult";
 
 // empty string for now since we're mocking the API calls
 const BASE_API_URL = "";
@@ -174,8 +175,8 @@ export async function getRewards(): Promise<SeedReward[]> {
 
 export async function claimReward(
   rewardClaim: SeedRewardClaim
-): Promise<string> {
-  return await apiFetch<string>(
+): Promise<RewardClaimResult> {
+  return await apiFetch<RewardClaimResult>(
     "/api/rewards/claim",
     {
       method: "POST",

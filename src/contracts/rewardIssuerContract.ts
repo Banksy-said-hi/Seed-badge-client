@@ -12,7 +12,7 @@ class RewardIssuerContract extends Contract {
 }
 
 // Define the contract address and ABI
-const contractAddress = "0x8D300C5Df27E131df1738dB5f0153162b2aE8860";
+const contractAddress = "0x6e9129eFf601e0B5C6cB463e46520DD3BbF924f7";
 const contractABI = [
   // Minimal ABI for the verifyAndTransfer function
   {

@@ -11,6 +11,8 @@ export const chainConfig = {
   chainId: "0xaa37dc", // Please use 0x1 for Mainnet
   rpcTarget:
     "https://optimism-sepolia.infura.io/v3/06f3f78b0f324d9c8cde54f90cd4fb5b",
+  wsTarget:
+    "wss://optimism-sepolia.infura.io/ws/v3/06f3f78b0f324d9c8cde54f90cd4fb5b",
   displayName: "Optimism Sepolia",
   blockExplorerUrl: "https://sepolia-optimism.etherscan.io/",
   ticker: "ETH",

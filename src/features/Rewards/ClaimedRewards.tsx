@@ -12,7 +12,7 @@ export function ClaimedRewards() {
 
   return (
     <Card
-      title="Claimed Rewards"
+      title="Reward Claim"
       content={
         <>
           {selectedReward.requiredEvents.map((requiredEvent, index) => {

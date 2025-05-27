@@ -7,38 +7,42 @@ import React, {
 } from "react";
 import { getEvents, claimReward } from "../api/klang";
 import { getRewards } from "../api/klang";
-import { SeedEvent } from "../types/SeedEvent";
-import { SeedReward } from "../types/SeedReward";
-import { SeedRewardClaimDisplay } from "../types/SeedRewardClaimDisplay";
+import {
+  SeedReward,
+  SeedEvent,
+  SeedRewardClaimDisplay,
+  RewardClaimResult,
+} from "../types/index";
 import { accountPair } from "../api/web3Auth";
 
 interface RewardsContextType {
+  isLoading: boolean;
   rewards: SeedReward[] | null;
   selectedReward: SeedReward | null;
   rewardClaim: SeedRewardClaimDisplay | null;
   eventsMap: Map<string, SeedEvent[]> | null;
+  claimResult: RewardClaimResult | null;
   handleRewardSelection: (rewardType: string) => Promise<void>;
   validate: () => boolean;
   handleClaim: () => Promise<void>;
   addEvent: (username: string, event: SeedEvent) => void;
   removeEvent: (username: string, event: SeedEvent) => void;
+  resetClaimResult: () => void;
 }
 
-const RewardsContext = createContext<RewardsContextType | null>(
-  null
-);
+const RewardsContext = createContext<RewardsContextType | null>(null);
 
-export function RewardsProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function RewardsProvider({ children }: { children: React.ReactNode }) {
+  const [isLoading, setIsLoading] = useState(false);
   const [rewards, setRewards] = useState<SeedReward[] | null>(null);
   const [selectedReward, setSelectedReward] = useState<SeedReward | null>(null);
   const [rewardClaim, setRewardClaim] = useState<SeedRewardClaimDisplay | null>(
     null
   );
   const [eventsMap, setEventsMap] = useState<Map<string, SeedEvent[]> | null>(
+    null
+  );
+  const [claimResult, setClaimResult] = useState<RewardClaimResult | null>(
     null
   );
 
@@ -89,16 +93,23 @@ export function RewardsProvider({
   }, [selectedReward, rewardClaim]);
 
   const handleClaim = useCallback(async () => {
-    if (!selectedReward || !rewardClaim) return;
+    setIsLoading(true);
+    try {
+      if (!selectedReward || !rewardClaim) return;
 
-    const claimer = (await accountPair).smartAccount;
-    const hash = await claimReward({
-      type: selectedReward.type,
-      events: Array.from(rewardClaim.eventsMap.values()).flat(),
-      claimer: claimer,
-    });
+      const claimer = (await accountPair).smartAccount;
+      const result = await claimReward({
+        type: selectedReward.type,
+        events: Array.from(rewardClaim.eventsMap.values()).flat(),
+        claimer: claimer,
+      });
 
-    console.log("Reward claimed: ", hash);
+      console.log("Reward claimed: ", result.hash);
+
+      setClaimResult(result);
+    } finally {
+      setIsLoading(false);
+    }
   }, [selectedReward, rewardClaim]);
 
   const addEvent = useCallback(
@@ -151,30 +162,36 @@ export function RewardsProvider({
     [eventsMap, rewardClaim, setEventsMap, setRewardClaim]
   );
 
+  const resetClaimResult = useCallback(() => {
+    setClaimResult(null);
+    setRewardClaim({
+      eventsMap: new Map<string, SeedEvent[]>(),
+    } as SeedRewardClaimDisplay);
+  }, []);
+
   const value = {
+    isLoading,
     rewards,
     selectedReward,
     rewardClaim,
     eventsMap,
+    claimResult,
     handleRewardSelection,
     validate,
     handleClaim,
     addEvent,
     removeEvent,
+    resetClaimResult,
   };
   return (
-    <RewardsContext.Provider value={value}>
-      {children}
-    </RewardsContext.Provider>
+    <RewardsContext.Provider value={value}>{children}</RewardsContext.Provider>
   );
 }
 
 export function useRewards() {
   const context = useContext(RewardsContext);
   if (!context) {
-    throw new Error(
-      "useRewards must be used within a RewardsProvider"
-    );
+    throw new Error("useRewards must be used within a RewardsProvider");
   }
   return context;
 }

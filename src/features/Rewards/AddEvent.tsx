@@ -1,7 +1,6 @@
 import { useRewards } from "../../context/RewardsContext";
-import { SeedEvent } from "../../types/SeedEvent";
+import { SeedEvent } from "../../types/index";
 import EventFull from "../../components/Landing/EventFull";
-
 
 export function AddEvent({
   username,

@@ -1,5 +1,17 @@
 [
   {
+    "type": "invitee_registered",
+    "requiredEvents": [
+      {
+        "eventType": "user_registered",
+        "amount": 1
+      }
+    ],
+    "payout": 10,
+    "sponsored": false,
+    "validators": ["single_user", "referral"]
+  },
+  {
     "type": "active_all_week",
     "requiredEvents": [
       {
