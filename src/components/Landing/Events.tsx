@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { getEvents } from "../../api/klang";
-import { SeedEvent } from "../../types/SeedEvent";
+import { SeedEvent } from "../../types/index";
 import Card from "../Card";
 import Loading from "../Loading";
 import EventGroups from "./EventGroups";

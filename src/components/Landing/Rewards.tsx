@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { getRewards } from "../../api/klang";
-import { SeedReward } from "../../types/SeedReward";
+import { SeedReward } from "../../types/index";
 import EventCompact from "./EventGroup";
 import Loading from "../Loading";
 import Card from "../Card";
