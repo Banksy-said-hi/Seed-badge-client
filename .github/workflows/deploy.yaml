@@ -16,20 +16,25 @@ jobs:
     # if event is push, pull_request labeled 'deploy' or workflow_dispatch
     if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'labeled' && contains(github.event.label.name, 'deploy')) }}
     steps:
-    
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: npm install
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
 
-    - name: Build project
-      run: npm run build
+      - name: Enable Corepack
+        run: corepack enable
 
-    - name: Publish Website to Cloudflare Pages
-      uses: cloudflare/wrangler-action@v3
-      with:
-        gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        command: pages deploy ./dist --project-name=klang-dapp --branch ${{ github.head_ref || github.ref_name }}
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build project
+        run: yarn build
+
+      - name: Publish Website to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist --project-name=klang-dapp --branch ${{ github.head_ref || github.ref_name }}
