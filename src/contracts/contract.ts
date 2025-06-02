@@ -1,13 +1,18 @@
-import type { ethers } from "ethers";
+import { ethers } from "ethers";
+
 import { accountPair, request } from "../api/web3Auth";
+import { chainConfig } from "../configs/chainConfig";
 
 export class Contract {
   address: string;
   abiInterface: ethers.Interface;
+  ethersContract: ethers.Contract;
 
   constructor(address: string, abiInterface: ethers.Interface) {
     this.address = address;
     this.abiInterface = abiInterface;
+    const provider = new ethers.WebSocketProvider(chainConfig.wsTarget);
+    this.ethersContract = new ethers.Contract(address, abiInterface, provider);
   }
 
   async call<R>(
@@ -62,5 +67,13 @@ export class Contract {
 
   async send(functionName: string, functionParams?: ReadonlyArray<unknown>): Promise<string> {
     return this.call<string>("eth_sendTransaction", functionName, functionParams);
+  }
+
+  addListener(eventName: string, listener: ethers.Listener): void {
+    this.ethersContract.on(eventName, listener);
+  }
+
+  removeListener(eventName: string, listener: ethers.Listener): void {
+    this.ethersContract.off(eventName, listener);
   }
 }

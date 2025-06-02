@@ -1,9 +1,7 @@
 import { ethers } from "ethers";
 import { Contract } from "./contract";
-import { accountPair } from "../api/web3Auth";
-import { chainConfig } from "../configs/chainConfig";
 
-const tokenAddress: `0x${string}` = "0x3C1adF0A04792CF870DdA5F01a6EABE503e82B12";
+const tokenAddress: `0x${string}` = "0x44b36fd983F3906af2275b9e72495AddC83C6595";
 
 const erc20Abi = [
   // Read-Only Functions
@@ -19,22 +17,12 @@ const erc20Abi = [
 ];
 
 class TokenContract extends Contract {
-  ethersContract: ethers.Contract;
-
-  constructor(address: string, abiInterface: ethers.Interface) {
-    super(address, abiInterface);
-    const provider = new ethers.WebSocketProvider(chainConfig.wsTarget);
-    this.ethersContract = new ethers.Contract(address, abiInterface, provider);
+  async onTransfer(callback: (from: string, to: string, amount: bigint) => void) {
+    this.addListener("Transfer", callback);
   }
 
-  async onTransfer(callback: (from: string, to: string, amount: bigint) => void) {
-    const account = (await accountPair).smartAccount;
-
-    this.ethersContract.on("Transfer", (from, to, amount) => {
-      if (from === account || to === account) {
-        callback(from, to, BigInt(amount));
-      }
-    });
+  async offTransfer(callback: (from: string, to: string, amount: bigint) => void) {
+    this.removeListener("Transfer", callback);
   }
 }
 

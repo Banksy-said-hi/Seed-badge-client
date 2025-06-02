@@ -1,6 +1,6 @@
 [
   {
-    "type": "invitee_registered",
+    "type": "user_registered",
     "requiredEvents": [
       {
         "eventType": "user_registered",
@@ -8,30 +8,18 @@
       }
     ],
     "payout": 10,
-    "sponsored": false,
+    "sponsored": true,
     "validators": ["single_user", "referral"]
   },
   {
-    "type": "active_all_week",
+    "type": "seedling_created",
     "requiredEvents": [
       {
-        "eventType": "user_logged_in",
-        "amount": 7
+        "eventType": "seedling_created",
+        "amount": 1
       }
     ],
     "payout": 25,
-    "sponsored": false,
-    "validators": ["single_user", "referral", "active_all_week"]
-  },
-  {
-    "type": "generational_cultivator",
-    "requiredEvents": [
-      {
-        "eventType": "seedling_has_another_seedling",
-        "amount": 3
-      }
-    ],
-    "payout": 50,
     "sponsored": true,
     "validators": ["generational_cultivator"]
   }

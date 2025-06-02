@@ -3,8 +3,17 @@ import { ethers, Wallet, AbiCoder } from "ethers";
 import { http, HttpResponse } from "msw";
 import eventsData from "./data/events.json";
 import rewardsData from "./data/rewards.json";
-import { rewardIssuerContract } from "../contracts/rewardIssuerContract";
-import type { SeedRewardClaim, SeedEvent } from "../types";
+import {
+  userRegisteredRewardContract,
+  seedlingCreatedRewardContract,
+} from "../contracts/erc20RewardContract";
+import type { SeedRewardClaim } from "../types/index";
+import type { SeedEvent } from "../types/index";
+
+const rewardMap = {
+  user_registered: userRegisteredRewardContract,
+  seedling_created: seedlingCreatedRewardContract,
+};
 
 export const handlers = [
   http.get("/api/events", () => {
@@ -52,11 +61,11 @@ export const handlers = [
 
       const content = ethers.hexlify(
         abiCoder.encode(
-          ["tuple(bytes32 userId, bytes32 type, uint256 timestamp)"],
+          ["tuple(bytes32 eventType, bytes32 userId, uint256 timestamp)"],
           [
             {
+              eventType: hash(event.data.type),
               userId: hash(event.data.userId),
-              type: hash(event.data.type),
               timestamp: event.data.timestamp,
             },
           ],
@@ -66,27 +75,13 @@ export const handlers = [
       return ethers.concat(["0x00", await sign(content), content]);
     };
 
-    const payload = ethers.hexlify(
-      abiCoder.encode(
-        ["tuple(address recipient, uint256 amount, bytes[] events)"],
-        [
-          {
-            recipient: rewardClaim.claimer,
-            amount: ethers.parseUnits(reward.payout.toString(), 18),
-            // Sign each event
-            events: await Promise.all(
-              rewardClaim.events.map(async (event) => {
-                return await signEvent(event);
-              }),
-            ),
-          },
-        ],
-      ),
+    const messages = await Promise.all(
+      rewardClaim.events.map(async (event) => {
+        return await signEvent(event);
+      }),
     );
 
-    const message = ethers.concat(["0x00", await sign(payload), payload]);
-
-    const hash = await rewardIssuerContract.verifyAndTransfer(message);
+    const hash = await rewardMap[rewardClaim.type as keyof typeof rewardMap].claimReward(messages);
     return HttpResponse.json({ hash });
   }),
 ];

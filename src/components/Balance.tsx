@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { Loading } from "./Loading";
-import { getTokenBalanceWithSymbol } from "../api/web3Auth";
+import { getTokenBalanceWithSymbol, accountPair } from "../api/web3Auth";
 import { tokenContract } from "../contracts/tokenContract";
 
 export function Balance() {
@@ -14,10 +14,16 @@ export function Balance() {
 
     getTokenBalance();
 
-    tokenContract.onTransfer(async () => {
-      await getTokenBalance();
-    });
-  });
+    const callback = async (from: string, to: string, _amount: bigint) => {
+      const account = (await accountPair).smartAccount;
+
+      if (from === account || to === account) {
+        getTokenBalance();
+      }
+    };
+
+    tokenContract.onTransfer(callback);
+  }, []);
 
   return <div>{tokenBalance ? <p>Token Balance : {tokenBalance}</p> : <Loading />}</div>;
 }
