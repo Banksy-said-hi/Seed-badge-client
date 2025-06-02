@@ -1,14 +1,15 @@
 import "./App.css";
 import { useEffect } from "react";
 
-import UserPanel from "./components/UserPanel";
+import { UserPanel } from "./components/UserPanel";
 import { web3Auth, initialize } from "./api/web3Auth";
 import { ConnectionState } from "./types/ConnectionState";
 import { useConnectionState } from "./hooks/useConnectionState";
+import "./App.css";
 
 let isInitialized: boolean = false;
 
-function App() {
+export function App() {
   const { connectionState, setConnectionState } = useConnectionState();
 
   useEffect(() => {
@@ -29,5 +30,3 @@ function App() {
 
   return <UserPanel connectionState={connectionState} />;
 }
-
-export default App;

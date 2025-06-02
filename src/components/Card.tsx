@@ -1,18 +1,15 @@
-import "./Card.css";
-import type { JSX } from "react";
+import type { ReactNode } from "react";
 
 type CardProps = {
   title?: string;
-  content?: JSX.Element;
+  children?: ReactNode;
 };
 
-function Card({ title, content }: CardProps) {
+export function Card({ title, children }: CardProps) {
   return (
     <div className="rounded overflow-hidden shadow-lg p-4">
       {title && <div className="font-bold text-xl mb-2">{title}</div>}
-      {content}
+      {children}
     </div>
   );
 }
-
-export default Card;

@@ -1,50 +1,38 @@
-import Login from "./Login";
-import Logout from "./Logout";
-import Address from "./Address";
-import Network from "./Network";
+import { Login } from "./Login";
+import { Logout } from "./Logout";
+import { Account } from "./Account";
+import { Network } from "./Network";
 import { ConnectionState } from "../types/ConnectionState";
-import Loading from "./Loading";
-import Balance from "./Balance";
-import TransferToken from "./TransferToken";
-import Card from "./Card";
+import { Loading } from "./Loading";
+import { Balance } from "./Balance";
+import { TransferToken } from "./TransferToken";
+import { Card } from "./Card";
 import { Landing } from "./Landing/Landing";
 
 type UserPanelProps = {
   connectionState: ConnectionState;
 };
 
-function UserPanel({ connectionState }: UserPanelProps) {
-  let content;
-
+export function UserPanel({ connectionState }: UserPanelProps) {
   switch (connectionState) {
     case ConnectionState.Initializing:
-      content = <Loading />;
-      break;
+      return <Loading />;
     case ConnectionState.Connected:
-      content = (
+      return (
         <div>
-          <Card
-            title="User Panel"
-            content={
-              <div>
-                <Address />
-                <Network />
-                <Balance />
-              </div>
-            }
-          />
+          <Card title="User Panel">
+            <div>
+              <Account />
+              <Network />
+              <Balance />
+            </div>
+          </Card>
           <TransferToken />
           <Landing />
           <Logout />
         </div>
       );
-      break;
-    case ConnectionState.Disconnected:
-      content = <Login />;
-      break;
+    default:
+      return <Login />;
   }
-
-  return <div>{content}</div>;
 }
-
-export default UserPanel;

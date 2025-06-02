@@ -1,7 +1,7 @@
 import type { SeedEvent } from "../../types/index";
-import EventGroup from "./EventGroup";
+import { EventGroup } from "./EventGroup";
 
-function EventGroups({ events }: { events: SeedEvent[] }) {
+export function EventGroups({ events }: { events: SeedEvent[] }) {
   const groups = events.reduce((group, event) => {
     const eventType = event.data.type;
     if (!group.has(eventType)) {
@@ -25,5 +25,3 @@ function EventGroups({ events }: { events: SeedEvent[] }) {
     </>
   );
 }
-
-export default EventGroups;

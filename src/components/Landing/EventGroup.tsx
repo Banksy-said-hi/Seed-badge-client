@@ -3,7 +3,7 @@ type EventProps = {
   eventCount: number;
 };
 
-function EventGroup({ eventType, eventCount }: EventProps) {
+export function EventGroup({ eventType, eventCount }: EventProps) {
   return (
     <div>
       <p>
@@ -12,5 +12,3 @@ function EventGroup({ eventType, eventCount }: EventProps) {
     </div>
   );
 }
-
-export default EventGroup;

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 
 import { getChain } from "../api/web3Auth";
-import Loading from "./Loading";
+import { Loading } from "./Loading";
 
-function Network() {
+export function Network() {
   const [chain, setChain] = useState<string | null>(null);
 
   useEffect(() => {
@@ -15,5 +15,3 @@ function Network() {
 
   return <div>{chain ? <p>Connected Network: {chain}</p> : <Loading />}</div>;
 }
-
-export default Network;

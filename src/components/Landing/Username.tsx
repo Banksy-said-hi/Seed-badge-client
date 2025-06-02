@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { verifierId } from "../../api/web3Auth";
-import Loading from "../Loading";
+import { Loading } from "../Loading";
 
-function Username({ userId }: { userId: string }) {
+export function Username({ userId }: { userId: string }) {
   const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,5 +19,3 @@ function Username({ userId }: { userId: string }) {
 
   return <p>{username ? username : <Loading />}</p>;
 }
-
-export default Username;

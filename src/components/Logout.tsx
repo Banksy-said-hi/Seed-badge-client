@@ -11,7 +11,7 @@ async function logout(setIsLoading: (isLoading: boolean) => void) {
   }
 }
 
-function Logout() {
+export function Logout() {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
@@ -27,5 +27,3 @@ function Logout() {
     </div>
   );
 }
-
-export default Logout;

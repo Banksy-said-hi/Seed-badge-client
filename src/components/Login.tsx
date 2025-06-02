@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { WALLET_ADAPTERS } from "@web3auth/base";
 
 import { connect } from "../api/web3Auth";
-import Loading from "./Loading";
+import { Loading } from "./Loading";
 import { authorize, authenticate } from "../api/klang";
 
 async function login(setLoading: (loading: boolean) => void) {
@@ -45,7 +45,7 @@ async function handleRedirect(setLoading: (loading: boolean) => void) {
   }
 }
 
-function Login() {
+export function Login() {
   const [isInitialized, setInitialized] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
@@ -75,5 +75,3 @@ function Login() {
     </div>
   );
 }
-
-export default Login;

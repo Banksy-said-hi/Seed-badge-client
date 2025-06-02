@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-import Card from "./Card";
+import { Card } from "./Card";
 import { token, transferTokens, formatUnitsToBaseUnit } from "../api/web3Auth";
 
-function TransferToken() {
+export function TransferToken() {
   const [symbol, setSymbol] = useState<string | null>(null);
   const [toAddress, setToAddress] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
@@ -26,32 +26,27 @@ function TransferToken() {
 
   // TODO: max amount button
   return (
-    <Card
-      title="Transfer Token"
-      content={
-        <div className="flex flex-col items-center space-y-4">
+    <Card title="Transfer Token">
+      <div className="flex flex-col items-center space-y-4">
+        <input
+          className="p-2 border rounded w-full"
+          placeholder="Address"
+          value={toAddress}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToAddress(e.target.value)}
+        ></input>
+        <div className="flex w-full items-center space-x-2">
           <input
             className="p-2 border rounded w-full"
-            placeholder="Address"
-            value={toAddress}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToAddress(e.target.value)}
+            placeholder="Amount"
+            value={amount}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAmount(e.target.value)}
           ></input>
-          <div className="flex w-full items-center space-x-2">
-            <input
-              className="p-2 border rounded w-full"
-              placeholder="Amount"
-              value={amount}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAmount(e.target.value)}
-            ></input>
-            <p>{symbol}</p>
-          </div>
-          <button onClick={transfer} className="p-2 bg-blue-500 text-white rounded">
-            Transfer
-          </button>
+          <p>{symbol}</p>
         </div>
-      }
-    />
+        <button onClick={transfer} className="p-2 bg-blue-500 text-white rounded">
+          Transfer
+        </button>
+      </div>
+    </Card>
   );
 }
-
-export default TransferToken;

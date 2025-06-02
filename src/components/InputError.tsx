@@ -2,7 +2,7 @@ type InputErrorProps = {
   message: string | null;
 };
 
-function InputError({ message }: InputErrorProps) {
+export function InputError({ message }: InputErrorProps) {
   return (
     <div>
       {message && (
@@ -16,5 +16,3 @@ function InputError({ message }: InputErrorProps) {
     </div>
   );
 }
-
-export default InputError;

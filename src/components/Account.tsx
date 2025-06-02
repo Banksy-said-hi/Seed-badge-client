@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 
 import { accountPair } from "../api/web3Auth";
-import Loading from "./Loading";
+import { Loading } from "./Loading";
 import type { AccountPair } from "../types/AccountPair";
 
-function Account() {
+export function Account() {
   const [account, setAccount] = useState<AccountPair | null>(null);
 
   useEffect(() => {
@@ -27,5 +27,3 @@ function Account() {
     </div>
   );
 }
-
-export default Account;
