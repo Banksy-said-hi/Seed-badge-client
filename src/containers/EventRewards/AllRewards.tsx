@@ -1,28 +1,16 @@
-import { useEffect, useState } from "react";
+import { EventGroup } from "../../components/EventGroup";
+import { Loading } from "../../components/Loading";
+import { Card } from "../../components/Card";
+import { Expandable } from "../../components/Expandable";
+import { useEventRewards } from "../../context/EventRewardsContext";
 
-import { getRewards } from "../../api/klang";
-import type { SeedReward } from "../../types/index";
-import { EventGroup } from "./EventGroup";
-import { Loading } from "../Loading";
-import { Card } from "../Card";
-import { Expandable } from "../Expandable";
-
-export function Rewards() {
-  const [rewards, setRewards] = useState<SeedReward[] | null>(null);
-
-  useEffect(() => {
-    const fetchRewards = async () => {
-      const data = await getRewards();
-      setRewards(data);
-    };
-
-    fetchRewards();
-  }, []);
+export function AllRewards() {
+  const { rewards } = useEventRewards();
 
   return (
     <div>
       {rewards ? (
-        <Card title="Rewards">
+        <Card title="All Rewards">
           {rewards.map((reward) => (
             <Expandable key={reward.type} title={reward.type}>
               <Card title="Required Events">

@@ -1,4 +1,4 @@
-import type { SeedEvent } from "../../types/index";
+import type { SeedEvent } from "../types/index";
 import { EventGroup } from "./EventGroup";
 
 export function EventGroups({ events }: { events: SeedEvent[] }) {

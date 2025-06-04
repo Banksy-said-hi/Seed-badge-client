@@ -1,11 +1,20 @@
-import { useEffect, useState } from "react";
-
-import { Loading } from "./Loading";
-import { getTokenBalanceWithSymbol, accountPair } from "../api/web3Auth";
+import { useState, useEffect } from "react";
+import { accountPair, getChain, getTokenBalanceWithSymbol } from "../api/web3Auth";
 import { tokenContract } from "../contracts/tokenContract";
+import type { AccountPair } from "../types";
 
-export function Balance() {
+export function useWeb3() {
+  const [account, setAccount] = useState<AccountPair | null>(null);
+  const [chain, setChain] = useState<string | null>(null);
   const [tokenBalance, setTokenBalance] = useState<string | null>(null);
+
+  useEffect(() => {
+    const init = async () => {
+      setAccount(await accountPair);
+      setChain(await getChain());
+    };
+    init();
+  }, []);
 
   useEffect(() => {
     const getTokenBalance = async () => {
@@ -25,5 +34,9 @@ export function Balance() {
     tokenContract.onTransfer(callback);
   }, []);
 
-  return <div>{tokenBalance ? <p>Token Balance : {tokenBalance}</p> : <Loading />}</div>;
+  return {
+    account,
+    chain,
+    tokenBalance,
+  };
 }

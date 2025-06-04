@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { getEvents, claimReward } from "../api/klang";
-import { getRewards } from "../api/klang";
+import { getEvents, claimReward, getRewards } from "../api/klang";
 import type {
   SeedReward,
   SeedEvent,
@@ -9,7 +8,7 @@ import type {
 } from "../types/index";
 import { accountPair } from "../api/web3Auth";
 
-type RewardsContextType = {
+type EventRewardsContextType = {
   isLoading: boolean;
   rewards: SeedReward[] | null;
   selectedReward: SeedReward | null;
@@ -24,9 +23,9 @@ type RewardsContextType = {
   resetClaimResult: () => void;
 };
 
-const RewardsContext = createContext<RewardsContextType | null>(null);
+const EventRewardsContext = createContext<EventRewardsContextType | null>(null);
 
-export function RewardsProvider({ children }: { children: React.ReactNode }) {
+export function EventRewardsProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [rewards, setRewards] = useState<SeedReward[] | null>(null);
   const [selectedReward, setSelectedReward] = useState<SeedReward | null>(null);
@@ -41,6 +40,15 @@ export function RewardsProvider({ children }: { children: React.ReactNode }) {
     fetchRewards();
   }, []);
 
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const data = await getEvents();
+      setEventsMap(data);
+    };
+
+    fetchEvents();
+  }, []);
+
   const handleRewardSelection = useCallback(
     async (rewardType: string) => {
       const currentSelectedReward = rewards?.find((reward) => reward.type === rewardType);
@@ -52,8 +60,6 @@ export function RewardsProvider({ children }: { children: React.ReactNode }) {
       setRewardClaim({
         eventsMap: new Map<string, SeedEvent[]>(),
       } as SeedRewardClaimDisplay);
-
-      setEventsMap((await getEvents()) || new Map<string, SeedEvent[]>());
     },
     [rewards],
   );
@@ -165,11 +171,11 @@ export function RewardsProvider({ children }: { children: React.ReactNode }) {
     removeEvent,
     resetClaimResult,
   };
-  return <RewardsContext.Provider value={value}>{children}</RewardsContext.Provider>;
+  return <EventRewardsContext.Provider value={value}>{children}</EventRewardsContext.Provider>;
 }
 
-export function useRewards() {
-  const context = useContext(RewardsContext);
+export function useEventRewards() {
+  const context = useContext(EventRewardsContext);
   if (!context) {
     throw new Error("useRewards must be used within a RewardsProvider");
   }

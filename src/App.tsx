@@ -1,11 +1,14 @@
 import "./App.css";
 import { useEffect } from "react";
-
-import { UserPanel } from "./components/UserPanel";
 import { web3Auth, initialize } from "./api/web3Auth";
 import { ConnectionState } from "./types/ConnectionState";
 import { useConnectionState } from "./hooks/useConnectionState";
-import "./App.css";
+import { Loading } from "./components/Loading";
+import { Login } from "./components/Login";
+import { Logout } from "./components/Logout";
+import { EventRewardContainer } from "./containers/EventRewards";
+import { TransferToken } from "./containers/TransferToken";
+import { UserPanel } from "./containers/UserPanel";
 
 let isInitialized: boolean = false;
 
@@ -26,7 +29,21 @@ export function App() {
     };
 
     init();
-  });
+  }, []);
 
-  return <UserPanel connectionState={connectionState} />;
+  switch (connectionState) {
+    case ConnectionState.Initializing:
+      return <Loading />;
+    case ConnectionState.Connected:
+      return (
+        <div>
+          <UserPanel />
+          <TransferToken />
+          <EventRewardContainer />
+          <Logout />
+        </div>
+      );
+    default:
+      return <Login />;
+  }
 }

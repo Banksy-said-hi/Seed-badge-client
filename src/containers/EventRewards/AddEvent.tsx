@@ -1,9 +1,9 @@
-import { useRewards } from "../../context/RewardsContext";
+import { useEventRewards } from "../../context/EventRewardsContext";
 import type { SeedEvent } from "../../types/index";
-import { EventFull } from "../../components/Landing/EventFull";
+import { EventFull } from "../../components/EventFull";
 
 export function AddEvent({ username, event }: { username: string; event: SeedEvent }) {
-  const { addEvent } = useRewards();
+  const { addEvent } = useEventRewards();
 
   return (
     <>

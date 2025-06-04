@@ -16,7 +16,7 @@ export function useConnectionState() {
     web3Auth.on(ADAPTER_EVENTS.DISCONNECTED, () => {
       setConnectionState(ConnectionState.Disconnected);
     });
-  });
+  }, []);
 
   return { connectionState, setConnectionState };
 }

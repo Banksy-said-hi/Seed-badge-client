@@ -1,10 +1,10 @@
 import { Expandable } from "../../components/Expandable";
 import { Card } from "../../components/Card";
-import { useRewards } from "../../context/RewardsContext";
+import { useEventRewards } from "../../context/EventRewardsContext";
 import { AddEvent } from "./AddEvent";
 
 export function Events() {
-  const { selectedReward, eventsMap, rewardClaim } = useRewards();
+  const { selectedReward, eventsMap, rewardClaim } = useEventRewards();
 
   if (!selectedReward || !eventsMap || !rewardClaim) return null;
 

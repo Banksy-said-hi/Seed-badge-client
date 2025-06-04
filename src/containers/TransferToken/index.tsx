@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-
-import { Card } from "./Card";
-import { token, transferTokens, formatUnitsToBaseUnit } from "../api/web3Auth";
+import { Card } from "../../components/Card";
+import { token, formatUnitsToBaseUnit, transferTokens } from "../../api/web3Auth";
 
 export function TransferToken() {
   const [symbol, setSymbol] = useState<string | null>(null);

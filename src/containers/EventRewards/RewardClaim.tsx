@@ -1,11 +1,12 @@
 import { Card } from "../../components/Card";
 import { Loading } from "../../components/Loading";
 import { Expandable } from "../../components/Expandable";
-import { useRewards } from "../../context/RewardsContext";
+import { useEventRewards } from "../../context/EventRewardsContext";
 import { RemoveEvent } from "./RemoveEvent";
 
-export function ClaimedRewards() {
-  const { selectedReward, rewardClaim, validate, handleClaim } = useRewards();
+
+export function RewardClaim() {
+  const { selectedReward, rewardClaim, validate, handleClaim } = useEventRewards();
 
   if (!rewardClaim || !selectedReward) return <Loading />;
 
