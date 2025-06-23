@@ -17,10 +17,18 @@ const rewardMap = {
 
 export const handlers = [
   http.get("/api/events", () => {
-    return HttpResponse.json(eventsData);
+    return new HttpResponse(JSON.stringify(eventsData), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }),
   http.get("/api/rewards", () => {
-    return HttpResponse.json(rewardsData);
+    return new HttpResponse(JSON.stringify(rewardsData), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }),
   http.post("/api/rewards/claim", async ({ request }) => {
     const rewardClaim: SeedRewardClaim = (await request.json()) as SeedRewardClaim;
@@ -82,6 +90,10 @@ export const handlers = [
     );
 
     const hash = await rewardMap[rewardClaim.type as keyof typeof rewardMap].claimReward(messages);
-    return HttpResponse.json({ hash });
+    return new HttpResponse(JSON.stringify({ hash }), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }),
 ];

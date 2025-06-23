@@ -4,7 +4,6 @@ import { Expandable } from "../../components/Expandable";
 import { useEventRewards } from "../../context/EventRewardsContext";
 import { RemoveEvent } from "./RemoveEvent";
 
-
 export function RewardClaim() {
   const { selectedReward, rewardClaim, validate, handleClaim } = useEventRewards();
 

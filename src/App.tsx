@@ -1,4 +1,3 @@
-import "./App.css";
 import { useEffect } from "react";
 import { web3Auth, initialize } from "./api/web3Auth";
 import { ConnectionState } from "./types/ConnectionState";
