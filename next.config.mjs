@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', 
+  // Removed 'output: export' to enable API routes for database connectivity
   distDir: './dist', 
   webpack: (config) => {
     config.resolve.fallback = {

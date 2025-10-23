@@ -7,8 +7,8 @@ type CardProps = {
 
 export function Card({ title, children }: CardProps) {
   return (
-    <div className="rounded overflow-hidden shadow-lg p-4">
-      {title && <div className="font-bold text-xl mb-2">{title}</div>}
+    <div className="bg-white rounded-xl overflow-hidden shadow-lg p-6 border border-gray-200">
+      {title && <div className="font-bold text-xl mb-4 text-gray-800">{title}</div>}
       {children}
     </div>
   );

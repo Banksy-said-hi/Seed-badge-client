@@ -8,14 +8,14 @@ const pimlicoAPIKey = "pim_XE7CUZced67FhiEqXyEJPZ";
 
 export const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0xaa37dc", // Please use 0x1 for Mainnet
-  rpcTarget: "https://optimism-sepolia.infura.io/v3/06f3f78b0f324d9c8cde54f90cd4fb5b",
-  wsTarget: "wss://optimism-sepolia.infura.io/ws/v3/06f3f78b0f324d9c8cde54f90cd4fb5b",
-  displayName: "Optimism Sepolia",
-  blockExplorerUrl: "https://sepolia-optimism.etherscan.io/",
+  chainId: "0xaa36a7", // Ethereum Sepolia
+  rpcTarget: "https://sepolia.infura.io/v3/06f3f78b0f324d9c8cde54f90cd4fb5b",
+  wsTarget: "wss://sepolia.infura.io/ws/v3/06f3f78b0f324d9c8cde54f90cd4fb5b",
+  displayName: "Ethereum Sepolia",
+  blockExplorerUrl: "https://sepolia.etherscan.io/",
   ticker: "ETH",
   tickerName: "Ethereum",
-  logo: "https://res.coinpaper.com/coinpaper/optimism_logo_6eba6a0c5c.png",
+  logo: "https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/6ed5f/eth-diamond-black.webp",
 };
 
 // Get the pimlico API Key from dashboard.pimlico.io
@@ -39,7 +39,7 @@ export const accountAbstractionProvider = new AccountAbstractionProvider({
 
 const chainMap: { [key: number]: string } = {
   1: "Ethereum Mainnet",
-  11155420: "Optimism Sepolia",
+  11155111: "Ethereum Sepolia",
 };
 
 export function resolveChainId(chainId: number): string {

@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Contract {
+  id                 String              @id
+  badgeId_bytes32    String              @unique
+  address            String              @unique
+  network            String
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime
+  name               String?
+  etherscanGuid      String?
+  verificationStatus VerificationStatus? @default(PENDING)
+  verificationUrl    String?
+  verified           Boolean             @default(false)
+  verifiedAt         DateTime?
+  Transaction        Transaction[]
+}
+
+model Transaction {
+  id                String            @id
+  hash              String            @unique
+  type              TransactionType
+  status            TransactionStatus
+  durationMs        Int
+  gasCostNative     Decimal
+  arguments         Json
+  contractId        String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @default(now())
+  blockHash         String?
+  blockNumber       BigInt?
+  cumulativeGasUsed BigInt?
+  effectiveGasPrice BigInt?
+  from              String?
+  gasUsed           BigInt?
+  to                String?
+  transactionIndex  Int?
+  Contract          Contract?         @relation(fields: [contractId], references: [id])
+}
+
+enum TransactionStatus {
+  SUCCESS
+  FAILED
+}
+
+enum TransactionType {
+  DEPLOY
+  SET_STATE
+}
+
+enum VerificationStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  ALREADY_VERIFIED
+}

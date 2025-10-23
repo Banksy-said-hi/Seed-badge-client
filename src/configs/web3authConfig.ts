@@ -3,8 +3,9 @@ import { WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { chainConfig, accountAbstractionProvider } from "./chainConfig";
 
+// Web3Auth Client ID for Klang dApp with JWKS configuration
 const clientId =
-  "BBciNB8_-ajaAbCTCcMlMFEkbRQn5l5C5BrYq25liwjWtm98X92ZmseHAE014DqyZxWcqi9pyR_0FkgEtZ4sQSY";
+  "BNUQornMJd68u-DaijSCW6D-SgFkC4ihAUYKkjN2h-fWwU79U8HEAM4iyJQMruAZJLJyhErkhaNPUNK6f6BFLzw";
 
 export const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: {
@@ -14,7 +15,7 @@ export const privateKeyProvider = new EthereumPrivateKeyProvider({
 
 export const web3authOptions: IWeb3AuthCoreOptions = {
   clientId: clientId, // Get your Client ID from the Web3Auth Dashboard
-  web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+  web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET, // Use DEVNET for testing, MAINNET for production
   storageKey: "local",
   privateKeyProvider,
   accountAbstractionProvider,

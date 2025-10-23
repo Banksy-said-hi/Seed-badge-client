@@ -3,6 +3,7 @@ import type { WHITE_LABEL_THEME, WhiteLabelData } from "@web3auth/auth-adapter";
 import { AuthAdapter } from "@web3auth/auth-adapter";
 import { privateKeyProvider } from "./web3authConfig";
 
+// OAuth Client ID for Seed authentication - properly configured with Web3Auth JWKS
 export const oAuthClientId = "b17dec48-2a07-4c12-9cda-8778d9209707";
 
 export const authAdapter = new AuthAdapter({
@@ -25,11 +26,12 @@ export const authAdapter = new AuthAdapter({
       useLogoLoader: true,
     } as WhiteLabelData,
     loginConfig: {
-      jwt: {
-        verifier: "klang", // Name of the verifier created on Web3Auth Dashboard
-        typeOfLogin: "jwt",
-        clientId: oAuthClientId, // OAuth Client ID
-      },
+        jwt: {
+          verifier: "klang-verifier-2", // Updated verifier name - should match the one created on Web3Auth Dashboard
+          typeOfLogin: "jwt",
+          clientId: oAuthClientId, // OAuth Client ID
+          // The JWKS endpoint and JWT validation are configured in the Web3Auth Dashboard
+        },
     },
   },
   loginSettings: {

@@ -6,14 +6,11 @@ import type { LoginParams } from "@web3auth/auth-adapter";
 import { web3authOptions } from "../configs/web3authConfig";
 import { authAdapter } from "../configs/authConfig";
 import { resolveChainId } from "../configs/chainConfig";
-import { tokenContract } from "../contracts/tokenContract";
-import type { AccountPair, Token } from "../types";
+import type { AccountPair } from "../types";
 
 export const web3Auth = new Web3AuthNoModal(web3authOptions);
 
 export let accountPair: Promise<AccountPair>;
-
-export let token: Promise<Token>;
 
 export let verifierId: Promise<string>;
 
@@ -21,16 +18,6 @@ async function reset() {
   accountPair = new Promise<AccountPair>((resolve) => {
     web3Auth.on(ADAPTER_EVENTS.CONNECTED, async () => {
       resolve(await getConnectedAccountPair());
-    });
-  });
-
-  token = new Promise<Token>((resolve) => {
-    web3Auth.on(ADAPTER_EVENTS.CONNECTED, async () => {
-      const symbol = await tokenContract.read<string>("symbol");
-
-      const decimals = await tokenContract.read<number>("decimals");
-
-      resolve({ symbol: symbol, decimals: decimals });
     });
   });
 
@@ -119,33 +106,4 @@ export async function connect(adapterType: WALLET_ADAPTER_TYPE, loginParams: Log
 
 export async function disconnect() {
   await web3Auth.logout();
-}
-
-export async function getTokenBalance() {
-  const account = (await accountPair).smartAccount;
-
-  return tokenContract.read<number>("balanceOf", [account]);
-}
-
-// 10 USDC
-export async function getTokenBalanceWithSymbol() {
-  const balance = await getTokenBalance();
-
-  return `${await formatUnitsFromBaseUnit(balance)} ${(await token).symbol}`;
-}
-
-export async function transferTokens(to: string, amount: bigint): Promise<string> {
-  return tokenContract.send("transfer", [to, amount]);
-}
-
-export async function formatUnitsFromBaseUnit(value: number) {
-  const decimals = (await token).decimals;
-
-  return BigInt(value) / 10n ** BigInt(decimals);
-}
-
-export async function formatUnitsToBaseUnit(value: number) {
-  const decimals = (await token).decimals;
-
-  return BigInt(value) * 10n ** BigInt(decimals);
 }
