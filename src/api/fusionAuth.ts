@@ -1,5 +1,14 @@
 import { web3Auth } from "./web3Auth";
 import { keccak256, toUtf8Bytes } from "ethers";
+import type {
+  FusionAuthUserDetails,
+  DecodedJWT,
+  AllTokenClaims,
+  TokenVerification,
+  FusionAuthVerification,
+  HashedFusionAuthId,
+  TokenIssuerInfo,
+} from "../types/FusionAuth";
 
 /**
  * Klang FusionAuth Integration
@@ -39,13 +48,9 @@ import { keccak256, toUtf8Bytes } from "ethers";
  */
 export async function getFusionAuthUserId(): Promise<string | null> {
   try {
-    console.log("🔍 Starting FusionAuth ID verification process...");
-
     // First, try to get it from the userinfo endpoint (most reliable - directly from Klang)
     const userDetails = await getFusionAuthUserDetails();
     if (userDetails?.sub) {
-      console.log("✅ Retrieved FusionAuth user ID from Klang's userinfo endpoint:", userDetails.sub);
-      console.log("📊 Full userinfo response from Klang:", userDetails);
       return userDetails.sub;
     }
 
@@ -54,12 +59,8 @@ export async function getFusionAuthUserId(): Promise<string | null> {
     
     if (userInfo.oAuthAccessToken) {
       const decoded = decodeJWT(userInfo.oAuthAccessToken);
-      console.log("🔐 Decoded OAuth Access Token:", decoded);
       
       if (decoded?.sub) {
-        console.log("⚠️  Retrieved FusionAuth user ID from access token (fallback):", decoded.sub);
-        console.log("🏷️  Token issuer (iss):", decoded.iss);
-        console.log("👥  Token audience (aud):", decoded.aud);
         return decoded.sub;
       }
     }
@@ -67,20 +68,14 @@ export async function getFusionAuthUserId(): Promise<string | null> {
     // Additional fallback: check the OAuth ID token
     if (userInfo.oAuthIdToken) {
       const decoded = decodeJWT(userInfo.oAuthIdToken);
-      console.log("🆔 Decoded OAuth ID Token:", decoded);
       
       if (decoded?.sub) {
-        console.log("⚠️  Retrieved FusionAuth user ID from OAuth ID token (fallback):", decoded.sub);
-        console.log("🏷️  Token issuer (iss):", decoded.iss);
-        console.log("👥  Token audience (aud):", decoded.aud);
         return decoded.sub;
       }
     }
 
-    console.warn("❌ No Klang FusionAuth user ID found in tokens or userinfo endpoint");
     return null;
   } catch (error) {
-    console.error("💥 Error retrieving Klang FusionAuth user ID:", error);
     return null;
   }
 }
@@ -89,12 +84,11 @@ export async function getFusionAuthUserId(): Promise<string | null> {
  * Retrieve detailed FusionAuth user information using the access token
  * This makes a direct API call to Klang's FusionAuth instance to get full user details
  */
-export async function getFusionAuthUserDetails(): Promise<any | null> {
+export async function getFusionAuthUserDetails(): Promise<FusionAuthUserDetails | null> {
   try {
     const userInfo = await web3Auth.getUserInfo();
     
     if (!userInfo.oAuthAccessToken) {
-      console.warn("No OAuth access token available");
       return null;
     }
 
@@ -116,7 +110,6 @@ export async function getFusionAuthUserDetails(): Promise<any | null> {
     const userData = await response.json();
     return userData;
   } catch (error) {
-    console.error("Error retrieving FusionAuth user details from Klang:", error);
     return null;
   }
 }
@@ -125,7 +118,7 @@ export async function getFusionAuthUserDetails(): Promise<any | null> {
  * Simple JWT decoder (without signature verification)
  * For production use, consider using a proper JWT library with signature validation
  */
-function decodeJWT(token: string): any {
+function decodeJWT(token: string): DecodedJWT | null {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) {
@@ -136,76 +129,8 @@ function decodeJWT(token: string): any {
     const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
     return decoded;
   } catch (error) {
-    console.error("Error decoding JWT:", error);
     return null;
   }
-}
-
-/**
- * Explain the difference between idToken and oAuthIdToken
- * This helps understand which token contains the real Klang FusionAuth user ID
- */
-export async function explainTokenDifferences(): Promise<{
-  explanation: string;
-  tokenAnalysis: any;
-}> {
-  const userInfo = await web3Auth.getUserInfo();
-  const tokenAnalysis: any = {};
-
-  // Analyze idToken (Web3Auth's token)
-  if (userInfo.idToken) {
-    const decoded = decodeJWT(userInfo.idToken);
-    tokenAnalysis.idToken = {
-      exists: true,
-      issuer: decoded?.iss,
-      subject: decoded?.sub,
-      isFromKlang: decoded?.iss?.includes('seed.game') || decoded?.iss?.includes('klang'),
-      purpose: "Web3Auth's internal user identification"
-    };
-  } else {
-    tokenAnalysis.idToken = { exists: false };
-  }
-
-  // Analyze oAuthIdToken (Original Klang token)
-  if (userInfo.oAuthIdToken) {
-    const decoded = decodeJWT(userInfo.oAuthIdToken);
-    tokenAnalysis.oAuthIdToken = {
-      exists: true,
-      issuer: decoded?.iss,
-      subject: decoded?.sub,
-      isFromKlang: decoded?.iss?.includes('seed.game') || decoded?.iss?.includes('klang'),
-      purpose: "Original ID token from Klang's FusionAuth containing real user ID"
-    };
-  } else {
-    tokenAnalysis.oAuthIdToken = { exists: false };
-  }
-
-  const explanation = `TOKEN DIFFERENCES EXPLAINED:
-
-1. idToken:
-   - This is Web3Auth's OWN ID token
-   - Issued by Web3Auth (not Klang)
-   - Contains Web3Auth's internal user identifier
-   - The 'sub' (subject) claim is Web3Auth's user ID, NOT your Klang FusionAuth ID
-   - Used for Web3Auth session management and wallet operations
-
-2. oAuthIdToken:
-   - This is the ORIGINAL ID token from Klang's FusionAuth
-   - Issued by Klang's FusionAuth (login.seed.game)
-   - Contains your actual Klang FusionAuth user information
-   - The 'sub' (subject) claim is your REAL Klang FusionAuth user ID
-   - This is what you want to use for Klang-specific operations
-
-RECOMMENDATION:
-For getting your Klang FusionAuth user ID, always prefer:
-1. Direct API call to Klang's /oauth2/userinfo endpoint (most reliable)
-2. oAuthIdToken's 'sub' claim (original Klang token)
-3. Never use idToken's 'sub' claim (that's Web3Auth's internal ID)`;
-
-  return {
-    explanation,
-    tokenAnalysis
-  };
 }
 
 /**
@@ -215,7 +140,7 @@ For getting your Klang FusionAuth user ID, always prefer:
  * @param fusionAuthId - The verified Klang FusionAuth user ID
  * @returns Keccac256 hash as hex string (0x prefixed)
  */
-export function hashFusionAuthId(fusionAuthId: string): string {
+function hashFusionAuthId(fusionAuthId: string): string {
   if (!fusionAuthId || typeof fusionAuthId !== 'string') {
     throw new Error('Invalid FusionAuth ID: must be a non-empty string');
   }
@@ -232,13 +157,6 @@ export function hashFusionAuthId(fusionAuthId: string): string {
   
   // Generate Keccac256 hash
   const hash = keccak256(toUtf8Bytes(saltedInput));
-  
-  console.log(`🔐 Hashing FusionAuth ID for smart contract:`, {
-    originalId: fusionAuthId,
-    normalizedId,
-    saltedInput,
-    hash
-  });
 
   return hash;
 }
@@ -247,13 +165,7 @@ export function hashFusionAuthId(fusionAuthId: string): string {
  * Get the hashed FusionAuth ID ready for smart contract use
  * This combines verification and hashing in one call
  */
-export async function getHashedFusionAuthId(): Promise<{
-  userId: string | null;
-  hashedId: string | null;
-  source: string;
-  confidence: string;
-  error?: string;
-}> {
+export async function getHashedFusionAuthId(): Promise<HashedFusionAuthId> {
   try {
     const verification = await verifyFusionAuthSource();
     
@@ -276,7 +188,6 @@ export async function getHashedFusionAuthId(): Promise<{
       confidence: verification.confidence
     };
   } catch (error) {
-    console.error('Error getting hashed FusionAuth ID:', error);
     return {
       userId: null,
       hashedId: null,
@@ -288,39 +199,14 @@ export async function getHashedFusionAuthId(): Promise<{
 }
 
 /**
- * Get FusionAuth user information from the ID token
- * This extracts user info from the ID token claims
- */
-export async function getFusionAuthUserFromIdToken(): Promise<any> {
-  try {
-    const userInfo = await web3Auth.getUserInfo();
-    
-    if (!userInfo || !userInfo.idToken) {
-      return null;
-    }
-
-    const decoded = decodeJWT(userInfo.idToken);
-    return decoded;
-  } catch (error) {
-    console.error("Error getting FusionAuth user from ID token:", error);
-    return null;
-  }
-}
-
-/**
  * Get all available token claims for debugging with source verification
  * Returns decoded data from all available tokens with issuer analysis
  */
-export async function getAllTokenClaims(): Promise<{
-  accessToken?: any;
-  idToken?: any;
-  oAuthIdToken?: any;
-  verification?: any;
-}> {
+async function getAllTokenClaims(): Promise<AllTokenClaims> {
   try {
     const userInfo = await web3Auth.getUserInfo();
-    const result: any = {};
-    const verification: any = {
+    const result: AllTokenClaims = {};
+    const verification: TokenVerification = {
       sources: [],
       issuers: [],
       audiences: [],
@@ -328,47 +214,54 @@ export async function getAllTokenClaims(): Promise<{
     };
 
     if (userInfo.oAuthAccessToken) {
-      result.accessToken = decodeJWT(userInfo.oAuthAccessToken);
-      verification.sources.push("OAuth Access Token (from Klang)");
-      verification.issuers.push({
-        token: "oAuthAccessToken",
-        issuer: result.accessToken?.iss,
-        isKlang: result.accessToken?.iss?.includes('seed.game') || result.accessToken?.iss?.includes('klang'),
-        description: "Access token from Klang's FusionAuth - used for API calls"
-      });
+      const decoded = decodeJWT(userInfo.oAuthAccessToken);
+      if (decoded) {
+        result.accessToken = decoded;
+        verification.sources.push("OAuth Access Token (from Klang)");
+        const issuerInfo: TokenIssuerInfo = {
+          token: "oAuthAccessToken",
+          issuer: decoded.iss,
+          isKlang: !!(decoded.iss?.includes('seed.game') || decoded.iss?.includes('klang')),
+          description: "Access token from Klang's FusionAuth - used for API calls"
+        };
+        verification.issuers.push(issuerInfo);
+      }
     }
 
     if (userInfo.idToken) {
-      result.idToken = decodeJWT(userInfo.idToken);
-      verification.sources.push("ID Token (from Web3Auth)");
-      verification.issuers.push({
-        token: "idToken",
-        issuer: result.idToken?.iss,
-        isKlang: result.idToken?.iss?.includes('seed.game') || result.idToken?.iss?.includes('klang'),
-        description: "Web3Auth's own ID token - contains Web3Auth user ID, NOT Klang FusionAuth ID"
-      });
+      const decoded = decodeJWT(userInfo.idToken);
+      if (decoded) {
+        result.idToken = decoded;
+        verification.sources.push("ID Token (from Web3Auth)");
+        const issuerInfo: TokenIssuerInfo = {
+          token: "idToken",
+          issuer: decoded.iss,
+          isKlang: !!(decoded.iss?.includes('seed.game') || decoded.iss?.includes('klang')),
+          description: "Web3Auth's own ID token - contains Web3Auth user ID, NOT Klang FusionAuth ID"
+        };
+        verification.issuers.push(issuerInfo);
+      }
     }
 
     if (userInfo.oAuthIdToken) {
-      result.oAuthIdToken = decodeJWT(userInfo.oAuthIdToken);
-      verification.sources.push("OAuth ID Token (original from Klang)");
-      verification.issuers.push({
-        token: "oAuthIdToken",
-        issuer: result.oAuthIdToken?.iss,
-        isKlang: result.oAuthIdToken?.iss?.includes('seed.game') || result.oAuthIdToken?.iss?.includes('klang'),
-        description: "Original ID token from Klang's FusionAuth - contains real Klang FusionAuth user ID"
-      });
+      const decoded = decodeJWT(userInfo.oAuthIdToken);
+      if (decoded) {
+        result.oAuthIdToken = decoded;
+        verification.sources.push("OAuth ID Token (original from Klang)");
+        const issuerInfo: TokenIssuerInfo = {
+          token: "oAuthIdToken",
+          issuer: decoded.iss,
+          isKlang: !!(decoded.iss?.includes('seed.game') || decoded.iss?.includes('klang')),
+          description: "Original ID token from Klang's FusionAuth - contains real Klang FusionAuth user ID"
+        };
+        verification.issuers.push(issuerInfo);
+      }
     }
 
     result.verification = verification;
-
-    console.log("🔍 Token Verification Report:");
-    console.log("📋 Available token sources:", verification.sources);
-    console.log("🏭 Token issuers:", verification.issuers);
     
     return result;
   } catch (error) {
-    console.error("Error getting token claims:", error);
     return {};
   }
 }
@@ -377,14 +270,9 @@ export async function getAllTokenClaims(): Promise<{
  * Verify if the user ID is coming from Klang's FusionAuth vs Web3Auth
  * Returns detailed verification information
  */
-export async function verifyFusionAuthSource(): Promise<{
-  userId: string | null;
-  source: 'klang-userinfo' | 'klang-token' | 'web3auth' | 'unknown';
-  confidence: 'high' | 'medium' | 'low';
-  evidence: any;
-}> {
+export async function verifyFusionAuthSource(): Promise<FusionAuthVerification> {
   try {
-    const evidence: any = {};
+    const evidence: Record<string, unknown> = {};
 
     // Try to get from Klang's userinfo endpoint (highest confidence)
     try {
@@ -456,7 +344,6 @@ export async function verifyFusionAuthSource(): Promise<{
     };
 
   } catch (error) {
-    console.error("Error verifying FusionAuth source:", error);
     return {
       userId: null,
       source: 'unknown',

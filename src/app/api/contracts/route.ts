@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../lib/db';
-import type { Contract } from '../../../lib/db';
+import type { Contract, Prisma } from '../../../lib/db';
 
 // Configure route as dynamic since it accesses database
 export const dynamic = 'force-dynamic';
@@ -31,10 +31,8 @@ export async function GET(request: NextRequest) {
     const network = searchParams.get('network');
     const verified = searchParams.get('verified');
 
-    console.log('API: Attempting to fetch contracts with params:', { limit, offset, network, verified });
-
     // Build filter conditions
-    const where: any = {};
+    const where: Prisma.ContractWhereInput = {};
     
     if (network) {
       where.network = network;
@@ -44,20 +42,7 @@ export async function GET(request: NextRequest) {
       where.verified = verified === 'true';
     }
 
-    console.log('API: Database where conditions:', where);
-
-    // Test basic database connectivity first
-    try {
-      console.log('API: Testing database connection...');
-      await db.$queryRaw`SELECT 1 as test`;
-      console.log('API: Database connection successful');
-    } catch (dbError) {
-      console.error('API: Database connection failed:', dbError);
-      throw new Error(`Database connection failed: ${dbError}`);
-    }
-
     // Execute database query with proper error handling
-    console.log('API: Executing contract queries...');
     const [contracts, totalCount] = await Promise.all([
       db.contract.findMany({
         where,
@@ -93,8 +78,6 @@ export async function GET(request: NextRequest) {
       db.contract.count({ where })
     ]);
 
-    console.log('API: Query results - contracts:', contracts.length, 'total:', totalCount);
-
     // Format response with metadata
     const response = {
       data: contracts,
@@ -119,8 +102,6 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error fetching contracts:', error);
-    
     // Return appropriate error response
     const errorMessage = error instanceof Error 
       ? error.message 

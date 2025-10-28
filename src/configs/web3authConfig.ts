@@ -3,9 +3,7 @@ import { WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { chainConfig, accountAbstractionProvider } from "./chainConfig";
 
-// Web3Auth Client ID for Klang dApp with JWKS configuration
-const clientId =
-  "BNUQornMJd68u-DaijSCW6D-SgFkC4ihAUYKkjN2h-fWwU79U8HEAM4iyJQMruAZJLJyhErkhaNPUNK6f6BFLzw";
+const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID || "";
 
 export const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: {

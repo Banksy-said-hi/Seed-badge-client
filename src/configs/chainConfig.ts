@@ -4,13 +4,14 @@ import {
   SafeSmartAccount,
 } from "@web3auth/account-abstraction-provider";
 
-const pimlicoAPIKey = "pim_XE7CUZced67FhiEqXyEJPZ";
+const pimlicoAPIKey = process.env.NEXT_PUBLIC_PIMLICO_API_KEY || "";
+const infuraApiKey = process.env.NEXT_PUBLIC_INFURA_API_KEY || "";
 
 export const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
   chainId: "0xaa36a7", // Ethereum Sepolia
-  rpcTarget: "https://sepolia.infura.io/v3/06f3f78b0f324d9c8cde54f90cd4fb5b",
-  wsTarget: "wss://sepolia.infura.io/ws/v3/06f3f78b0f324d9c8cde54f90cd4fb5b",
+  rpcTarget: `https://sepolia.infura.io/v3/${infuraApiKey}`,
+  wsTarget: `wss://sepolia.infura.io/ws/v3/${infuraApiKey}`,
   displayName: "Ethereum Sepolia",
   blockExplorerUrl: "https://sepolia.etherscan.io/",
   ticker: "ETH",

@@ -20,21 +20,17 @@ export default function ContractsList() {
     async function checkOwnership() {
       if (!allContracts?.length) return;
 
-      console.log('🏁 BadgesList: Starting ownership checks for', allContracts.length, 'contracts');
       setIsCheckingOwnership(true);
 
       try {
         const userIdResult = await getHashedFusionAuthId();
-        console.log('👤 BadgesList: User ID result:', userIdResult);
         
         if (!userIdResult.hashedId) {
-          console.error('❌ BadgesList: No hashed ID available');
           setOwnedBadges([]);
           return;
         }
         
         const userId = userIdResult.hashedId;
-        console.log('👤 BadgesList: Using hash for ownership checks:', userId);
 
         // Sequential processing with delays to avoid rate limiting
         const owned = [];
@@ -42,36 +38,24 @@ export default function ContractsList() {
         for (let i = 0; i < allContracts.length; i++) {
           const contract = allContracts[i];
           try {
-            console.log(`🔗 BadgesList: Checking ownership [${i + 1}/${allContracts.length}] for`, contract.address, contract.name || 'Unnamed');
             const onchain = new OnchainContract(contract.address, BADGE_IFACE);
-            console.log('🔧 BadgesList: Created contract instance, calling get() with:', userId);
             const owns = await onchain.read<boolean>('get', [userId]);
-            console.log('✅ BadgesList: Ownership result for', contract.address, ':', owns);
             
             if (owns) {
               owned.push(contract);
             }
             
             // Add 300ms delay between checks to avoid rate limiting
-            // (except after the last one)
             if (i < allContracts.length - 1) {
-              console.log('⏳ Waiting 300ms before next check to avoid rate limits...');
               await new Promise(resolve => setTimeout(resolve, 300));
             }
           } catch (err) {
-            console.error('❌ Badge ownership check failed for', contract.address, err);
+            // Silent error handling
           }
         }
         
-        console.log('🏆 BadgesList: Final results:', {
-          total: allContracts.length,
-          owned: owned.length,
-          ownedBadges: owned.map(c => ({ address: c.address, name: c.name }))
-        });
-        
         setOwnedBadges(owned);
       } catch (error) {
-        console.error('💥 Badge ownership check failed:', error);
         setOwnedBadges([]);
       } finally {
         setIsCheckingOwnership(false);

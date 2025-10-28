@@ -1,43 +1,38 @@
-## Overview
-Klang dApp is a React-based web application that brings blockchain functionality to in-game experiences. Leveraging Klang OAuth for secure authentication, the dApp automatically creates and manages user wallets, allowing players to seamlessly claim Petal tokens as rewards for their in-game activities. Built on the Optimism Layer 2 network, it ensures fast transaction speeds and minimal fees, while advanced features like account abstraction, gas sponsorship, and real-time notifications enhance the overall user experience.
-
 ## Features
+
 - **Klang OAuth Authentication:** Securely log in using your Klang credentials.
 - **Automatic Wallet Creation:** A wallet is created and tied to your user account upon first login.
 - **Account Abstraction:** Utilizes smart contract wallets for programmable access to funds and improved security.
-- **Optimism Layer 2 Integration:** Enjoy fast, cost-effective micro-transactions for an enhanced in-game economy.
-- **Token Claiming System:** Claim Petal tokens as rewards for completing in-game challenges.
-- **Challenges Display:** View detailed information about available challenges, including requirements, time limits, and rewards.
-- **Notifications/Alerts:** Stay up-to-date with real-time alerts on token claims, new challenges, and other important updates.
-- **On-Ramp (Planned):** Convert fiat currency to Petal tokens to facilitate smoother in-game spending.
 
 ## Installation
 
 ### Prerequisites
+
 - [Node.js](https://nodejs.org/) version >=20
 
 ### Steps
+
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/ChainSafe/klang-dApp.git
-   cd klang-dApp
+   git clone https://github.com/Banksy-said-hi/seed-badge-client.git
+   cd seed-badge-client
    ```
-2. **Install Dependencies**
+2. **Environment Setup**
    ```bash
-   corepack enable
-   yarn
+   Ask Sina for the .env file
    ```
-3. **Build the Project**
+3. **Install Dependencies**
    ```bash
-   yarn build
+   yarn install
    ```
 4. **Start the Development Server**
    ```bash
    yarn dev
    ```
-The application will run at http://localhost:5173.
+   The application will run at http://localhost:5173.
+
+## Next Steps
+
+- Add comprehensive test coverage, implement error handling and retry logic, add error boundaries and better error messages, implement error monitoring (e.g., Sentry), and set up production deployment with CI/CD
 
 ## References
-
-[Specification Doc](https://docs.google.com/document/d/1GSXJJLyE2nMbELqZfqY57_wBln-bN5AS-xi-HfSicuE/edit?usp=sharing)
-[Work Breakdown](https://docs.google.com/document/d/1br-v1KOq5nB-Ydb440CBCR1UZcf3jCCfKtMSnaPsxF0/edit?usp=sharing)

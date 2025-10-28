@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { Card } from "./Card";
 import { ContentLoading } from "./ContentLoading";
 import { verifyFusionAuthSource, getHashedFusionAuthId } from "../api/fusionAuth";
+import type { FusionAuthVerification, HashedFusionAuthId } from "../types/FusionAuth";
 
 export function UserProfile() {
-  const [verificationResult, setVerificationResult] = useState<any>(null);
-  const [hashedResult, setHashedResult] = useState<any>(null);
+  const [verificationResult, setVerificationResult] = useState<FusionAuthVerification | null>(null);
+  const [hashedResult, setHashedResult] = useState<HashedFusionAuthId | null>(null);
 
   useEffect(() => {
     const fetchFusionAuthData = async () => {
@@ -17,16 +18,8 @@ export function UserProfile() {
         // Get hashed ID for smart contract use
         const hashed = await getHashedFusionAuthId();
         setHashedResult(hashed);
-
-        // Log verification results
-        console.log("🔍 FusionAuth ID Verification Results:");
-        console.log("👤 User ID:", verification.userId);
-        console.log("🎯 Source:", verification.source);
-        console.log("🔒 Confidence:", verification.confidence);
-        console.log("📋 Evidence:", verification.evidence);
-        console.log("🔐 Smart Contract Hash:", hashed.hashedId);
       } catch (fusionAuthError) {
-        console.error("Error fetching FusionAuth data:", fusionAuthError);
+        // Silent error handling
       }
     };
 
@@ -104,7 +97,7 @@ export function UserProfile() {
                 {/* Copy Button */}
                 <div className="text-center mt-4">
                   <button
-                    onClick={() => navigator.clipboard.writeText(hashedResult.hashedId)}
+                    onClick={() => hashedResult.hashedId && navigator.clipboard.writeText(hashedResult.hashedId)}
                     className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors text-sm font-medium"
                   >
                     📋 Copy Hash

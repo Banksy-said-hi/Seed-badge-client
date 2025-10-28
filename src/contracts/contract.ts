@@ -11,8 +11,6 @@ export class Contract {
   constructor(address: string, abiInterface: ethers.Interface) {
     this.address = address;
     this.abiInterface = abiInterface;
-    console.log('🔧 Contract: Creating provider with wsTarget:', chainConfig.wsTarget);
-    console.log('🔧 Contract: Chain ID:', chainConfig.chainId, 'Display:', chainConfig.displayName);
     const provider = new ethers.WebSocketProvider(chainConfig.wsTarget);
     this.ethersContract = new ethers.Contract(address, abiInterface, provider);
   }

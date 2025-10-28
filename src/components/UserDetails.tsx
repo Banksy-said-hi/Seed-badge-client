@@ -3,9 +3,10 @@ import { Card } from "./Card";
 import { ContentLoading } from "./ContentLoading";
 import { web3Auth } from "../api/web3Auth";
 import { verifyFusionAuthSource } from "../api/fusionAuth";
+import type { FusionAuthVerification } from "../types/FusionAuth";
 
 export function UserDetails() {
-  const [verificationResult, setVerificationResult] = useState<any>(null);
+  const [verificationResult, setVerificationResult] = useState<FusionAuthVerification | null>(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -15,18 +16,11 @@ export function UserDetails() {
           // Run comprehensive verification
           const verification = await verifyFusionAuthSource();
           setVerificationResult(verification);
-
-          // Log verification results
-          console.log("🔍 FusionAuth ID Verification Results:");
-          console.log("👤 User ID:", verification.userId);
-          console.log("🎯 Source:", verification.source);
-          console.log("🔒 Confidence:", verification.confidence);
-          console.log("📋 Evidence:", verification.evidence);
         } catch (fusionAuthError) {
-          console.error("Error fetching FusionAuth data:", fusionAuthError);
+          // Silent error handling
         }
       } catch (error) {
-        console.error("Error fetching user info:", error);
+        // Silent error handling
       }
     };
 

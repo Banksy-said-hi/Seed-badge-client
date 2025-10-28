@@ -3,8 +3,7 @@ import type { WHITE_LABEL_THEME, WhiteLabelData } from "@web3auth/auth-adapter";
 import { AuthAdapter } from "@web3auth/auth-adapter";
 import { privateKeyProvider } from "./web3authConfig";
 
-// OAuth Client ID for Seed authentication - properly configured with Web3Auth JWKS
-export const oAuthClientId = "b17dec48-2a07-4c12-9cda-8778d9209707";
+export const oAuthClientId = process.env.NEXT_PUBLIC_OAUTH_CLIENT_ID || "";
 
 export const authAdapter = new AuthAdapter({
   adapterSettings: {

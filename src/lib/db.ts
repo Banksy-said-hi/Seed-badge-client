@@ -53,7 +53,6 @@ class DatabaseClient {
       await client.$queryRaw`SELECT 1`;
       return true;
     } catch (error) {
-      console.error('Database connection test failed:', error);
       return false;
     }
   }
@@ -66,4 +65,4 @@ export const db = DatabaseClient.getInstance();
 export { DatabaseClient };
 
 // Export Prisma types for use in components/hooks
-export type { Contract, Transaction, VerificationStatus, TransactionStatus, TransactionType } from '../generated/prisma';
+export type { Contract, Transaction, VerificationStatus, TransactionStatus, TransactionType, Prisma } from '../generated/prisma';
